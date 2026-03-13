@@ -1,0 +1,7 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#f5f5f4"/>
+  <circle cx="300" cy="315" r="150" fill="#000000"/>
+  <path d="M250 265V365H350" stroke="#FFFFFF" stroke-width="30" fill="none" stroke-linecap="square"/>
+  <text x="500" y="300" font-family="Arial, sans-serif" font-size="72" font-weight="bold" fill="#000000">LocoreMind</text>
+  <text x="500" y="370" font-family="Arial, sans-serif" font-size="32" fill="#666666">Local AI Agent Platform</text>
+</svg>
