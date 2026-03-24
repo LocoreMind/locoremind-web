@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - LocoreMind</title>
+    <meta name="description" content="Privacy Policy for LocoreMind - Local AI Agent Platform">
+
+    <link rel="icon" type="image/png" href="/assets/locoremind-logo.png">
+    <link rel="apple-touch-icon" href="/assets/locoremind-logo.png">
+    <link rel="icon" type="image/svg+xml" href="/assets/logo.svg">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+        }
+        .dark .glass-effect {
+            background: rgba(17, 24, 39, 0.8);
+        }
+    </style>
+</head>
+<body class="bg-stone-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 glass-effect border-b border-gray-200 dark:border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="font-serif text-2xl font-semibold text-gray-900 dark:text-white">LocoreMind</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button onclick="toggleDarkMode()" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition">
+                        <svg id="sun-icon" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                        <svg id="moon-icon" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="pt-32 pb-20 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
+        <h1 class="font-serif text-4xl md:text-5xl font-bold mb-6">Privacy Policy</h1>
+        <p class="text-gray-600 dark:text-gray-400 mb-12">Last updated: March 24, 2026</p>
+
+        <div class="prose prose-lg dark:prose-invert max-w-none space-y-8">
+            <section>
+                <h2 class="font-serif text-2xl font-bold mb-4">1. Introduction</h2>
+                <p class="text-gray-700 dark:text-gray-300 mb-4">
+                    LocoreMind ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we handle information in connection with our local AI models and services.
+                </p>
+            </section>
+
+            <section>
+                <h2 class="font-serif text-2xl font-bold mb-4">2. Local-First Philosophy</h2>
+                <p class="text-gray-700 dark:text-gray-300 mb-4">
+                    Our models are designed to run entirely on your local hardware. This means:
+                </p>
+                <ul class="list-disc pl-6 text-gray-700 dark:text-gray-300 space-y-2">
+                    <li>Your data never leaves your machine when using our models locally</li>
+                    <li>We do not collect, store, or process your prompts or model outputs</li>
+                    <li>You maintain complete control over your data and privacy</li>
+                    <li>No API calls are made to our servers during model inference</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2 class="font-serif text-2xl font-bold mb-4">3. Website Analytics</h2>
+                <p class="text-gray-700 dark:text-gray-300 mb-4">
+                    Our website (locoremind.com) may collect basic analytics information including:
+                </p>
+                <ul class="list-disc pl-6 text-gray-700 dark:text-gray-300 space-y-2">
+                    <li>Page views and navigation patterns</li>
+                    <li>Browser type and device information</li>
+                    <li>Referring websites</li>
+                    <li>General geographic location (country/region level)</li>
+                </ul>
+                <p class="text-gray-700 dark:text-gray-300 mt-4">
+                    This information is used solely to improve our website and understand how users interact with our content.
+                </p>
+            </section>
+
+            <section>
+                <h2 class="font-serif text-2xl font-bold mb-4">4. GitHub and Third-Party Services</h2>
+                <p class="text-gray-700 dark:text-gray-300 mb-4">
+                    Our code repositories are hosted on GitHub and models on HuggingFace. When you interact with these platforms:
+                </p>
+                <ul class="list-disc pl-6 text-gray-700 dark:text-gray-300 space-y-2">
+                    <li>GitHub's privacy policy applies to repository interactions</li>
+                    <li>HuggingFace's privacy policy applies to model downloads</li>
+                    <li>We do not control or have access to data collected by these platforms</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2 class="font-serif text-2xl font-bold mb-4">5. Cookies</h2>
+                <p class="text-gray-700 dark:text-gray-300 mb-4">
+                    Our website uses minimal cookies for:
+                </p>
+                <ul class="list-disc pl-6 text-gray-700 dark:text-gray-300 space-y-2">
+                    <li>Remembering your dark mode preference</li>
+                    <li>Basic analytics (if enabled)</li>
+                </ul>
+                <p class="text-gray-700 dark:text-gray-300 mt-4">
+                    You can disable cookies in your browser settings, though this may affect website functionality.
+                </p>
+            </section>
+
+            <section>
+                <h2 class="font-serif text-2xl font-bold mb-4">6. Data Security</h2>
+                <p class="text-gray-700 dark:text-gray-300 mb-4">
+                    Since our models run locally on your hardware, you are responsible for:
+                </p>
+                <ul class="list-disc pl-6 text-gray-700 dark:text-gray-300 space-y-2">
+                    <li>Securing your local environment</li>
+                    <li>Protecting any sensitive data you process with our models</li>
+                    <li>Implementing appropriate access controls</li>
+                    <li>Backing up your data as needed</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2 class="font-serif text-2xl font-bold mb-4">7. Children's Privacy</h2>
+                <p class="text-gray-700 dark:text-gray-300 mb-4">
+                    Our services are not directed to children under 13. We do not knowingly collect personal information from children under 13. If you believe we have inadvertently collected such information, please contact us.
+                </p>
+            </section>
+
+            <section>
+                <h2 class="font-serif text-2xl font-bold mb-4">8. International Users</h2>
+                <p class="text-gray-700 dark:text-gray-300 mb-4">
+                    Our models can be used anywhere in the world. Since they run locally, data processing occurs entirely within your jurisdiction, subject to your local laws and regulations.
+                </p>
+            </section>
+
+            <section>
+                <h2 class="font-serif text-2xl font-bold mb-4">9. Changes to This Policy</h2>
+                <p class="text-gray-700 dark:text-gray-300 mb-4">
+                    We may update this Privacy Policy from time to time. Changes will be posted on this page with an updated "Last updated" date. We encourage you to review this policy periodically.
+                </p>
+            </section>
+
+            <section>
+                <h2 class="font-serif text-2xl font-bold mb-4">10. Contact Us</h2>
+                <p class="text-gray-700 dark:text-gray-300 mb-4">
+                    If you have questions about this Privacy Policy, please contact us through our GitHub repository at <a href="https://github.com/LocoreMind" class="text-primary hover:text-secondary underline">github.com/LocoreMind</a>.
+                </p>
+            </section>
+
+            <section class="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-lg">
+                <h3 class="font-serif text-xl font-bold mb-3">Privacy-First Commitment</h3>
+                <p class="text-gray-700 dark:text-gray-300">
+                    At LocoreMind, privacy isn't just a policy—it's our architecture. By running models locally on your hardware, we've eliminated the fundamental privacy risks associated with cloud-based AI services. Your code, your data, your machine. Always.
+                </p>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 dark:bg-black text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center text-sm text-gray-500">
+                <a href="index.html" class="hover:text-white transition">← Back to Home</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function toggleDarkMode() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.theme = 'light';
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.theme = 'dark';
+            }
+        }
+
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+</body>
+</html>

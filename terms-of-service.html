@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Service - LocoreMind</title>
+    <meta name="description" content="Terms of Service for LocoreMind - Local AI Agent Platform">
+
+    <link rel="icon" type="image/png" href="/assets/locoremind-logo.png">
+    <link rel="apple-touch-icon" href="/assets/locoremind-logo.png">
+    <link rel="icon" type="image/svg+xml" href="/assets/logo.svg">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+        }
+        .dark .glass-effect {
+            background: rgba(17, 24, 39, 0.8);
+        }
+    </style>
+</head>
+<body class="bg-stone-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 glass-effect border-b border-gray-200 dark:border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="font-serif text-2xl font-semibold text-gray-900 dark:text-white">LocoreMind</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button onclick="toggleDarkMode()" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition">
+                        <svg id="sun-icon" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                        <svg id="moon-icon" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="pt-32 pb-20 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
+        <h1 class="font-serif text-4xl md:text-5xl font-bold mb-6">Terms of Service</h1>
+        <p class="text-gray-600 dark:text-gray-400 mb-12">Last updated: March 24, 2026</p>
+
+        <div class="prose prose-lg dark:prose-invert max-w-none space-y-8">
+            <section>
+                <h2 class="font-serif text-2xl font-bold mb-4">1. Acceptance of Terms</h2>
+                <p class="text-gray-700 dark:text-gray-300 mb-4">
+                    By accessing or using LocoreMind's models, software, and services (collectively, the "Services"), you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our Services.
+                </p>
+            </section>
+
+            <section>
+                <h2 class="font-serif text-2xl font-bold mb-4">2. Open Source License</h2>
+                <p class="text-gray-700 dark:text-gray-300 mb-4">
+                    LocoreMind models and software are released under open source licenses as specified in each repository. You are free to use, modify, and distribute our models in accordance with the applicable license terms. Please refer to individual repositories for specific license information.
+                </p>
+            </section>
+
+            <section>
+                <h2 class="font-serif text-2xl font-bold mb-4">3. Use of Services</h2>
+                <p class="text-gray-700 dark:text-gray-300 mb-4">
+                    You may use our Services for lawful purposes only. You agree not to use the Services:
+                </p>
+                <ul class="list-disc pl-6 text-gray-700 dark:text-gray-300 space-y-2">
+                    <li>In any way that violates applicable laws or regulations</li>
+                    <li>To generate malicious code or content intended to harm others</li>
+                    <li>To infringe upon intellectual property rights of others</li>
+                    <li>To engage in unauthorized access to computer systems</li>
+                    <li>For any illegal or harmful activities</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2 class="font-serif text-2xl font-bold mb-4">4. Local Deployment</h2>
+                <p class="text-gray-700 dark:text-gray-300 mb-4">
+                    Our models are designed to run locally on your hardware. You are responsible for:
+                </p>
+                <ul class="list-disc pl-6 text-gray-700 dark:text-gray-300 space-y-2">
+                    <li>Ensuring your hardware meets the requirements for running the models</li>
+                    <li>Maintaining the security of your local deployment</li>
+                    <li>Complying with all applicable laws in your jurisdiction</li>
+                    <li>Any outputs generated by the models on your system</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2 class="font-serif text-2xl font-bold mb-4">5. No Warranty</h2>
+                <p class="text-gray-700 dark:text-gray-300 mb-4">
+                    THE SERVICES ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED. WE DO NOT WARRANT THAT THE SERVICES WILL BE UNINTERRUPTED, ERROR-FREE, OR FREE OF HARMFUL COMPONENTS. YOU USE THE SERVICES AT YOUR OWN RISK.
+                </p>
+            </section>
+
+            <section>
+                <h2 class="font-serif text-2xl font-bold mb-4">6. Limitation of Liability</h2>
+                <p class="text-gray-700 dark:text-gray-300 mb-4">
+                    TO THE MAXIMUM EXTENT PERMITTED BY LAW, LOCOREMIND SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, OR ANY LOSS OF PROFITS OR REVENUES, WHETHER INCURRED DIRECTLY OR INDIRECTLY, OR ANY LOSS OF DATA, USE, GOODWILL, OR OTHER INTANGIBLE LOSSES.
+                </p>
+            </section>
+
+            <section>
+                <h2 class="font-serif text-2xl font-bold mb-4">7. Model Output</h2>
+                <p class="text-gray-700 dark:text-gray-300 mb-4">
+                    AI models may generate inaccurate, biased, or inappropriate content. You are solely responsible for reviewing, validating, and using any outputs generated by our models. We do not endorse or take responsibility for model-generated content.
+                </p>
+            </section>
+
+            <section>
+                <h2 class="font-serif text-2xl font-bold mb-4">8. Modifications to Terms</h2>
+                <p class="text-gray-700 dark:text-gray-300 mb-4">
+                    We reserve the right to modify these Terms of Service at any time. Changes will be effective immediately upon posting to our website. Your continued use of the Services after changes are posted constitutes acceptance of the modified terms.
+                </p>
+            </section>
+
+            <section>
+                <h2 class="font-serif text-2xl font-bold mb-4">9. Contact</h2>
+                <p class="text-gray-700 dark:text-gray-300 mb-4">
+                    For questions about these Terms of Service, please contact us through our GitHub repository at <a href="https://github.com/LocoreMind" class="text-primary hover:text-secondary underline">github.com/LocoreMind</a>.
+                </p>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 dark:bg-black text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center text-sm text-gray-500">
+                <a href="index.html" class="hover:text-white transition">← Back to Home</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function toggleDarkMode() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.theme = 'light';
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.theme = 'dark';
+            }
+        }
+
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+</body>
+</html>
