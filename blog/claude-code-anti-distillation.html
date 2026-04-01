@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Code's Anti-Distillation System | LocoreMind Blog</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='50' cy='50' r='50' fill='%23000000'/%3E%3Cpath d='M35 30V70H65' stroke='%23FFFFFF' stroke-width='12' fill='none' stroke-linecap='square'/%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0c0a14;--bg2:#120f1e;--bg3:#1a1528;
+  --text:#f0edf7;--text-dim:#a89ec0;--text-muted:#6b5f85;
+  --gold:#fbbf24;--amber:#f59e0b;--violet:#a78bfa;--purple:#7c3aed;
+  --rose:#f472b6;--fuchsia:#d946ef;--emerald:#34d399;--red:#ef4444;
+  --grad1:linear-gradient(135deg,#fbbf24,#f59e0b,#f472b6,#a78bfa,#7c3aed);
+  --grad-hero:linear-gradient(135deg,#ef4444,#f59e0b,#fbbf24,#a78bfa,#7c3aed);
+  --grad2:linear-gradient(135deg,#fbbf24 0%,#a78bfa 100%);
+  --grad-soft:linear-gradient(135deg,rgba(251,191,36,0.12),rgba(167,139,250,0.12));
+  --border:rgba(167,139,250,0.15);
+  --orb1:rgba(251,191,36,0.08);--orb2:rgba(124,58,237,0.1);--orb3:rgba(244,114,182,0.06);
+  --card-hover-bg:rgba(167,139,250,0.03);
+  --font-display:'Sora',sans-serif;--font-mono:'DM Mono',monospace;
+}
+html.light{
+  --bg:#fffcf9;--bg2:#faf5f0;--bg3:#f3ecf8;
+  --text:#3b2e5a;--text-dim:#7b6e9a;--text-muted:#b0a6c8;
+  --gold:#d4a030;--amber:#c48d20;--violet:#b49aef;--purple:#9678e0;
+  --rose:#e8a0c8;--emerald:#2ab380;--red:#d93636;
+  --grad1:linear-gradient(135deg,#f0d080,#f0c0d8,#d4b0f0,#b898e8);
+  --grad-hero:linear-gradient(135deg,#d93636,#f0d080,#f0c0d8,#d4b0f0,#b898e8);
+  --grad2:linear-gradient(135deg,#f0d080 0%,#d4b0f0 100%);
+  --border:rgba(180,154,239,0.18);
+  --orb1:rgba(240,208,128,0.15);--orb2:rgba(180,152,232,0.12);--orb3:rgba(240,192,216,0.1);
+  --card-hover-bg:rgba(212,176,240,0.08);
+}
+html{scroll-behavior:smooth;background:var(--bg)}
+body{font-family:var(--font-display);color:var(--text);background:var(--bg);overflow-x:hidden;line-height:1.7}
+
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:rgba(167,139,250,0.3);border-radius:9px}
+
+/* ── Site nav ── */
+.site-nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 36px;display:flex;align-items:center;justify-content:space-between;
+  background:rgba(12,10,20,0.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+html.light .site-nav{background:rgba(255,252,249,0.85)}
+.site-nav-brand{font-family:var(--font-display);font-weight:700;font-size:18px;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:10px}
+.site-nav-brand svg{width:28px;height:28px}
+.site-nav-links{display:flex;align-items:center;gap:20px}
+.site-nav-links a{font-family:var(--font-mono);font-size:13px;color:var(--text-dim);text-decoration:none;transition:color 0.3s}
+.site-nav-links a:hover{color:var(--gold)}
+.site-nav-links .current{color:var(--gold)}
+
+/* ── Ambient orbs ── */
+.orb{position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:-1}
+.orb-1{width:600px;height:600px;background:var(--orb1);top:-200px;left:-100px;animation:drift1 20s ease-in-out infinite alternate}
+.orb-2{width:500px;height:500px;background:var(--orb2);bottom:-150px;right:-100px;animation:drift2 18s ease-in-out infinite alternate}
+.orb-3{width:400px;height:400px;background:var(--orb3);top:40%;left:50%;animation:drift3 22s ease-in-out infinite alternate}
+@keyframes drift1{0%{transform:translate(0,0)}100%{transform:translate(80px,60px)}}
+@keyframes drift2{0%{transform:translate(0,0)}100%{transform:translate(-60px,-80px)}}
+@keyframes drift3{0%{transform:translate(-50%,-50%)}100%{transform:translate(-40%,-40%)}}
+
+section{position:relative;padding:100px 0}
+.container{max-width:1140px;margin:0 auto;padding:0 36px}
+
+/* ── Gradient text ── */
+.gt{background:var(--grad1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-gt{background:var(--grad-hero);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;position:relative;padding-top:80px}
+.hero-content{position:relative;z-index:2}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;padding:8px 20px;
+  background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.25);
+  border-radius:100px;font-size:13px;color:var(--red);letter-spacing:0.5px;
+  margin-bottom:40px;animation:fadeIn 1s ease both;font-family:var(--font-mono)}
+.hero-eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--red);
+  animation:blink 2s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+.hero h1{font-weight:800;font-size:clamp(2.8rem,8vw,5.5rem);line-height:0.95;
+  letter-spacing:-3px;margin-bottom:24px;animation:fadeUp 1s 0.2s ease both}
+.hero-desc{font-size:clamp(1rem,2vw,1.2rem);color:var(--text-dim);max-width:640px;
+  margin:0 auto 56px;font-weight:300;line-height:1.8;animation:fadeUp 1s 0.4s ease both}
+.hero-meta{font-family:var(--font-mono);font-size:13px;color:var(--text-muted);
+  animation:fadeUp 1s 0.5s ease both;margin-bottom:36px}
+.hero-tags{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;animation:fadeUp 1s 0.6s ease both}
+.hero-tag{font-family:var(--font-mono);font-size:11px;padding:6px 16px;border-radius:100px;
+  background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.15);color:var(--gold)}
+.hero-tag.violet{background:rgba(167,139,250,0.08);border:1px solid rgba(167,139,250,0.15);color:var(--violet)}
+.hero-tag.red{background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.15);color:var(--red)}
+
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(32px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── Divider ── */
+.divider{height:1px;background:var(--grad2);opacity:0.2;margin:0 auto;max-width:600px}
+
+/* SECTION HEADERS */
+.sec-eyebrow{font-family:var(--font-mono);font-size:12px;letter-spacing:3px;text-transform:uppercase;
+  color:var(--gold);margin-bottom:12px}
+.sec-title{font-weight:800;font-size:clamp(1.8rem,4vw,2.8rem);letter-spacing:-1px;margin-bottom:20px}
+.sec-desc{color:var(--text-dim);font-weight:300;max-width:700px;margin-bottom:56px;font-size:15px;line-height:1.8}
+
+/* CODE BLOCKS */
+.code-block{background:var(--bg2);border:1px solid var(--border);border-radius:14px;
+  overflow:hidden;margin:32px 0}
+.code-block-header{display:flex;align-items:center;gap:8px;padding:14px 20px;
+  border-bottom:1px solid var(--border);font-family:var(--font-mono);font-size:11px;
+  color:var(--text-muted);letter-spacing:1px;text-transform:uppercase}
+.code-block-header .dot-r{width:8px;height:8px;border-radius:50%;background:var(--rose);opacity:0.6}
+.code-block-header .dot-g{width:8px;height:8px;border-radius:50%;background:var(--gold);opacity:0.6}
+.code-block-header .dot-v{width:8px;height:8px;border-radius:50%;background:var(--violet);opacity:0.6}
+.code-block-header span.label{margin-left:8px}
+.code-block pre{padding:24px;overflow-x:auto;font-family:var(--font-mono);font-size:13px;
+  line-height:1.9;color:var(--text-dim);tab-size:2}
+.code-block pre .key{color:var(--violet)}
+.code-block pre .str{color:var(--gold)}
+.code-block pre .comment{color:var(--text-muted);font-style:italic}
+.code-block pre .type{color:var(--rose)}
+.code-block pre .punct{color:var(--text-muted)}
+.code-block pre .fn{color:var(--emerald)}
+.code-block pre .bool{color:var(--red)}
+
+/* ARTICLE PROSE */
+.prose{max-width:760px;font-size:15px;color:var(--text-dim);line-height:1.8}
+.prose p{margin-bottom:24px}
+.prose strong{color:var(--text);font-weight:600}
+.prose code{font-family:var(--font-mono);font-size:12px;padding:3px 8px;border-radius:6px;
+  background:rgba(167,139,250,0.08);border:1px solid rgba(167,139,250,0.12);color:var(--violet)}
+
+/* ARCHITECTURE CARDS */
+.arch{padding:100px 0}
+.arch-flow{display:flex;align-items:stretch;gap:0;justify-content:center;flex-wrap:wrap}
+.arch-card{flex:1;min-width:200px;max-width:280px;padding:28px 24px;border-radius:16px;
+  border:1px solid var(--border);position:relative;overflow:hidden;
+  transition:all 0.4s ease;background:var(--bg2)}
+.arch-card::before{content:'';position:absolute;inset:-1px;border-radius:16px;padding:1px;
+  background:var(--grad1);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:opacity 0.4s}
+.arch-card:hover::before{opacity:1}
+.arch-card:hover{transform:translateY(-4px)}
+.arch-card-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;
+  justify-content:center;font-size:20px;margin-bottom:16px}
+.arch-card-icon.icon-req{background:color-mix(in srgb,var(--gold) 15%,transparent);color:var(--gold)}
+.arch-card-icon.icon-srv{background:color-mix(in srgb,var(--violet) 15%,transparent);color:var(--violet)}
+.arch-card-icon.icon-res{background:color-mix(in srgb,var(--rose) 15%,transparent);color:var(--rose)}
+.arch-card-icon.icon-out{background:color-mix(in srgb,var(--emerald) 15%,transparent);color:var(--emerald)}
+.arch-card h3{font-weight:700;font-size:1.05rem;margin-bottom:4px}
+.arch-card .role{font-family:var(--font-mono);font-size:10px;letter-spacing:2px;
+  text-transform:uppercase;color:var(--text-muted);margin-bottom:12px}
+.arch-card p{font-size:13px;color:var(--text-dim);line-height:1.6}
+
+.arch-arrow{display:flex;align-items:center;padding:0 8px;flex-shrink:0}
+.arch-arrow svg{width:48px;height:24px}
+
+/* SPECS */
+.specs{background:var(--bg2)}
+.specs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
+.spec{padding:22px 24px;border-radius:12px;background:var(--bg);border:1px solid var(--border);
+  transition:all 0.35s ease}
+.spec:hover{border-color:rgba(251,191,36,0.3);transform:translateY(-2px)}
+.spec-k{font-family:var(--font-mono);font-size:11px;color:var(--text-muted);
+  letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px}
+.spec-v{font-weight:600;font-size:1.05rem}
+.spec-v.hl{background:var(--grad2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+/* LAYER TABLE */
+.layer-table{width:100%;border-collapse:collapse;margin-top:48px;font-size:14px}
+.layer-table th{text-align:left;padding:14px 18px;font-family:var(--font-mono);font-size:11px;
+  letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);font-weight:400;
+  border-bottom:1px solid var(--border)}
+.layer-table td{padding:14px 18px;border-bottom:1px solid var(--border)}
+.layer-table tr:hover td{background:var(--card-hover-bg)}
+.layer-label{font-weight:600}
+.layer-label.l1{color:var(--gold)}
+.layer-label.l2{color:var(--violet)}
+.layer-label.l3{color:var(--rose)}
+
+/* STREAM FLOW */
+.stream-flow{display:flex;flex-direction:column;gap:0;max-width:680px}
+.stream-step{display:flex;align-items:flex-start;gap:16px;padding:18px 0;position:relative}
+.stream-step:not(:last-child)::after{content:'';position:absolute;left:15px;top:52px;bottom:0;
+  width:1px;background:var(--border)}
+.stream-dot{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;font-size:12px;font-family:var(--font-mono);border:1px solid var(--border);
+  background:var(--bg2);color:var(--text-muted);position:relative;z-index:1}
+.stream-dot.active{border-color:var(--violet);color:var(--violet);background:rgba(167,139,250,0.08)}
+.stream-dot.gold{border-color:var(--gold);color:var(--gold);background:rgba(251,191,36,0.08)}
+.stream-dot.red{border-color:var(--red);color:var(--red);background:rgba(239,68,68,0.08)}
+.stream-dot.rose{border-color:var(--rose);color:var(--rose);background:rgba(244,114,182,0.08)}
+.stream-content{flex:1}
+.stream-label{font-family:var(--font-mono);font-size:13px;color:var(--violet);margin-bottom:4px;font-weight:500}
+.stream-label.gold{color:var(--gold)}
+.stream-label.red{color:var(--red)}
+.stream-label.rose{color:var(--rose)}
+.stream-desc{font-size:13px;color:var(--text-dim);line-height:1.6}
+.stream-data{font-family:var(--font-mono);font-size:12px;color:var(--text-muted);line-height:1.6;
+  padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;margin-top:8px}
+.stream-data .key{color:var(--violet)}
+.stream-data .str{color:var(--gold)}
+.stream-data .bool{color:var(--red)}
+
+/* CALLOUT */
+.callout{padding:24px 28px;border-radius:14px;margin:32px 0;border:1px solid}
+.callout.warn{background:rgba(239,68,68,0.05);border-color:rgba(239,68,68,0.2)}
+.callout.info{background:rgba(167,139,250,0.05);border-color:rgba(167,139,250,0.2)}
+.callout-title{font-family:var(--font-mono);font-size:12px;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;font-weight:500}
+.callout.warn .callout-title{color:var(--red)}
+.callout.info .callout-title{color:var(--violet)}
+.callout p{font-size:14px;color:var(--text-dim);line-height:1.7;margin:0}
+
+/* FOOTER */
+footer{text-align:center;padding:64px 36px;font-size:13px;color:var(--text-muted)}
+footer a{color:var(--violet);text-decoration:none;transition:color 0.3s}
+footer a:hover{color:var(--gold)}
+footer .footer-line{width:60px;height:2px;background:var(--grad2);margin:0 auto 20px;border-radius:1px}
+
+/* REVEAL */
+.rv{opacity:0;transform:translateY(36px);transition:all 0.9s cubic-bezier(0.22,1,0.36,1)}
+.rv.vis{opacity:1;transform:translateY(0)}
+.rv-d1{transition-delay:0.08s}.rv-d2{transition-delay:0.16s}
+.rv-d3{transition-delay:0.24s}.rv-d4{transition-delay:0.32s}
+
+@media(max-width:768px){
+  .container{padding:0 20px}
+  section{padding:64px 0}
+  .arch-flow{flex-direction:column;align-items:center;gap:20px}
+  .arch-card{max-width:100%;min-width:0}
+  .arch-arrow{transform:rotate(90deg);padding:8px 0}
+  .code-block pre{font-size:11px;padding:16px}
+  .site-nav{padding:12px 20px}
+  .stream-flow{gap:0}
+  .specs-grid{grid-template-columns:1fr}
+}
+
+/* THEME TOGGLE */
+.theme-toggle{width:36px;height:36px;
+  border-radius:50%;border:1px solid var(--border);background:var(--bg2);
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:all 0.4s ease}
+.theme-toggle:hover{transform:scale(1.1);border-color:var(--violet)}
+.theme-toggle svg{width:18px;height:18px;transition:all 0.4s ease}
+.theme-toggle .icon-sun{display:none;fill:var(--gold)}
+.theme-toggle .icon-moon{display:block;fill:var(--violet)}
+html.light .theme-toggle .icon-sun{display:block}
+html.light .theme-toggle .icon-moon{display:none}
+
+html.transitioning,html.transitioning *,html.transitioning *::before,html.transitioning *::after{
+  transition:background 0.5s ease,color 0.5s ease,border-color 0.5s ease,box-shadow 0.5s ease !important}
+</style>
+<script>if(localStorage.getItem('theme')==='light')document.documentElement.classList.add('light')</script>
+</head>
+<body>
+
+<!-- SITE NAV -->
+<nav class="site-nav">
+  <a href="../index.html" class="site-nav-brand">
+    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="50" fill="currentColor"/><path d="M35 30V70H65" stroke="var(--bg)" stroke-width="12" fill="none" stroke-linecap="square"/></svg>
+    LocoreMind
+  </a>
+  <div class="site-nav-links">
+    <a href="../index.html">Home</a>
+    <a href="index.html" class="current">Blog</a>
+    <a href="https://github.com/LocoreMind" target="_blank">GitHub &#8599;</a>
+    <a href="https://huggingface.co/LocoreMind" target="_blank">HuggingFace &#8599;</a>
+    <button class="theme-toggle" aria-label="Toggle theme" onclick="toggleTheme()">
+      <svg class="icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <svg class="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3" stroke="var(--gold)" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="21" x2="12" y2="23" stroke="var(--gold)" stroke-width="2" stroke-linecap="round"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" stroke="var(--gold)" stroke-width="2" stroke-linecap="round"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" stroke="var(--gold)" stroke-width="2" stroke-linecap="round"/><line x1="1" y1="12" x2="3" y2="12" stroke="var(--gold)" stroke-width="2" stroke-linecap="round"/><line x1="21" y1="12" x2="23" y2="12" stroke="var(--gold)" stroke-width="2" stroke-linecap="round"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36" stroke="var(--gold)" stroke-width="2" stroke-linecap="round"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" stroke="var(--gold)" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+</nav>
+
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-eyebrow"><span class="dot"></span> Security Deep Dive</div>
+    <h1>Claude Code's<br><span class="hero-gt">Anti-Distillation</span><br>System</h1>
+    <p class="hero-desc">A source code analysis of the three-layer defense system Claude Code uses to prevent model distillation &mdash; fake tool injection, connector text summarization, and streamlined output transforms.</p>
+    <div class="hero-meta">April 1, 2026 &middot; 12 min read</div>
+    <div class="hero-tags">
+      <span class="hero-tag red">Anti-Distillation</span>
+      <span class="hero-tag violet">Claude Code</span>
+      <span class="hero-tag">Source Analysis</span>
+      <span class="hero-tag violet">Model Security</span>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- OVERVIEW -->
+<section>
+  <div class="container">
+    <div class="sec-eyebrow rv">Overview</div>
+    <div class="sec-title rv">What Is Anti-Distillation?</div>
+    <div class="prose rv">
+      <p><strong>Knowledge distillation</strong> is a technique where a smaller "student" model learns to replicate the behavior of a larger "teacher" model by training on the teacher's outputs. In the context of commercial LLMs, this means a competitor could systematically record API interactions &mdash; inputs and outputs &mdash; to train a cheaper model that approximates the original.</p>
+      <p><strong>Claude Code</strong> contains a three-layer anti-distillation system designed to make such recording useless. By poisoning tool definitions, summarizing intermediate reasoning, and obfuscating SDK output, the system attacks distillation at every stage of the pipeline: request, response, and client output.</p>
+    </div>
+    <div class="callout warn rv rv-d1">
+      <div class="callout-title">Important Note</div>
+      <p>All three mechanisms are <strong>disabled in the public open-source build</strong>. The <code>feature()</code> function in the published code (<code>src/_stubs/bun-bundle.ts</code>) always returns <code>false</code>. These defenses only activate in Anthropic's internal builds where the real <code>bun:bundle</code> feature flags resolve to <code>true</code>.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- THREE LAYERS ARCHITECTURE -->
+<section class="arch">
+  <div class="container">
+    <div class="sec-eyebrow rv">Architecture</div>
+    <div class="sec-title rv">Three Layers of Defense</div>
+    <p class="sec-desc rv">Each layer operates at a different stage of the API lifecycle, creating defense in depth against distillation attempts.</p>
+    <div class="arch-flow">
+      <div class="arch-card rv">
+        <div class="arch-card-icon icon-req">&#9888;</div>
+        <h3>Fake Tool Injection</h3>
+        <div class="role">Request Side</div>
+        <p>Server injects fake tool definitions into API requests. Distilled models learn nonexistent tools, poisoning training data.</p>
+      </div>
+      <div class="arch-arrow rv">
+        <svg viewBox="0 0 48 24"><path d="M0 12 L32 12" stroke="url(#ag1)" stroke-width="2" fill="none" stroke-dasharray="4 4"><animate attributeName="stroke-dashoffset" from="8" to="0" dur="0.8s" repeatCount="indefinite"/></path><polygon points="32,7 44,12 32,17" fill="var(--violet)"/><defs><linearGradient id="ag1" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="var(--gold)"/><stop offset="100%" stop-color="var(--violet)"/></linearGradient></defs></svg>
+      </div>
+      <div class="arch-card rv rv-d1">
+        <div class="arch-card-icon icon-srv">&#9998;</div>
+        <h3 class="gt">Connector Text</h3>
+        <div class="role">Response Side</div>
+        <p>Server summarizes intermediate reasoning between tool calls and signs it cryptographically. Distillers see only summaries.</p>
+      </div>
+      <div class="arch-arrow rv rv-d1">
+        <svg viewBox="0 0 48 24"><path d="M0 12 L32 12" stroke="url(#ag2)" stroke-width="2" fill="none" stroke-dasharray="4 4"><animate attributeName="stroke-dashoffset" from="8" to="0" dur="0.8s" repeatCount="indefinite"/></path><polygon points="32,7 44,12 32,17" fill="var(--violet)"/><defs><linearGradient id="ag2" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="var(--gold)"/><stop offset="100%" stop-color="var(--violet)"/></linearGradient></defs></svg>
+      </div>
+      <div class="arch-card rv rv-d2">
+        <div class="arch-card-icon icon-out">&#9687;</div>
+        <h3>Streamlined Output</h3>
+        <div class="role">Client Side</div>
+        <p>SDK output strips tool details to vague summaries. Observers cannot recover exact tool calls or parameters.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- LAYER 1: FAKE TOOL INJECTION -->
+<section class="specs">
+  <div class="container">
+    <div class="sec-eyebrow rv">Layer 1</div>
+    <div class="sec-title rv">Fake Tool Injection</div>
+    <div class="prose rv">
+      <p>The first layer operates on the <strong>API request side</strong>. When enabled, Claude Code sends <code>anti_distillation: ['fake_tools']</code> in the request body. This instructs the Anthropic API server to inject fabricated tool definitions alongside the real ones.</p>
+      <p>If an attacker records these API interactions for distillation training, their student model will learn to call tools that <strong>don't actually exist</strong>. The model becomes "poisoned" &mdash; it generates tool calls for phantom tools, producing broken outputs that are impossible to debug without understanding the defense.</p>
+    </div>
+    <div class="code-block rv rv-d1">
+      <div class="code-block-header">
+        <span class="dot-r"></span><span class="dot-g"></span><span class="dot-v"></span>
+        <span class="label">src/services/api/claude.ts:301-313</span>
+      </div>
+      <pre><span class="comment">// Anti-distillation: send fake_tools opt-in for 1P CLI only</span>
+<span class="key">if</span> (
+  <span class="fn">feature</span>(<span class="str">'ANTI_DISTILLATION_CC'</span>)
+    ? process.env.<span class="type">CLAUDE_CODE_ENTRYPOINT</span> === <span class="str">'cli'</span> &amp;&amp;
+      <span class="fn">shouldIncludeFirstPartyOnlyBetas</span>() &amp;&amp;
+      <span class="fn">getFeatureValue_CACHED_MAY_BE_STALE</span>(
+        <span class="str">'tengu_anti_distill_fake_tool_injection'</span>,
+        <span class="bool">false</span>,
+      )
+    : <span class="bool">false</span>
+) {
+  result.<span class="key">anti_distillation</span> = [<span class="str">'fake_tools'</span>]
+}</pre>
+    </div>
+    <div class="prose rv rv-d2">
+      <p>The activation requires <strong>all four conditions</strong> to be true simultaneously:</p>
+    </div>
+    <div class="specs-grid rv rv-d2" style="margin-top:24px">
+      <div class="spec"><div class="spec-k">Compile-time Flag</div><div class="spec-v hl">feature('ANTI_DISTILLATION_CC')</div></div>
+      <div class="spec"><div class="spec-k">Entry Point</div><div class="spec-v">CLI only</div></div>
+      <div class="spec"><div class="spec-k">Provider</div><div class="spec-v">firstParty / foundry</div></div>
+      <div class="spec"><div class="spec-k">Remote Flag</div><div class="spec-v hl">tengu_anti_distill_fake_tool_injection</div></div>
+    </div>
+    <div class="callout info rv rv-d3" style="margin-top:32px">
+      <div class="callout-title">How It Works Server-Side</div>
+      <p>The actual fake tool generation happens on Anthropic's API servers, not in Claude Code itself. The client merely sends the opt-in signal. This means the fake tool definitions are dynamically generated and never appear in the open-source code &mdash; making them impossible to filter out by static analysis.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- LAYER 2: CONNECTOR TEXT SUMMARIZATION -->
+<section>
+  <div class="container">
+    <div class="sec-eyebrow rv">Layer 2</div>
+    <div class="sec-title rv">Connector Text Summarization</div>
+    <div class="prose rv">
+      <p>The second layer targets the <strong>API response</strong>. When Claude Code makes agentic tool calls, the model generates intermediate text between tool invocations &mdash; reasoning about what to do next, analyzing tool results, etc. This "connector text" is the most valuable training signal for distillation.</p>
+      <p>With this defense enabled, the Anthropic API server <strong>buffers this connector text, replaces it with a summary, and attaches a cryptographic signature</strong>. The signature allows the server to restore the original text on subsequent turns, maintaining Claude's reasoning context while hiding it from external observers.</p>
+    </div>
+    <div class="code-block rv rv-d1">
+      <div class="code-block-header">
+        <span class="dot-r"></span><span class="dot-g"></span><span class="dot-v"></span>
+        <span class="label">src/utils/betas.ts:279-297</span>
+      </div>
+      <pre><span class="comment">// POC: server-side connector-text summarization (anti-distillation). The</span>
+<span class="comment">// API buffers assistant text between tool calls, summarizes it, and returns</span>
+<span class="comment">// the summary with a signature so the original can be restored on subsequent</span>
+<span class="comment">// turns &mdash; same mechanism as thinking blocks. Ant-only while we measure</span>
+<span class="comment">// TTFT/TTLT/capacity; betas already flow to tengu_api_success for splitting.</span>
+
+<span class="key">if</span> (
+  <span class="type">SUMMARIZE_CONNECTOR_TEXT_BETA_HEADER</span> &amp;&amp;
+  process.env.<span class="type">USER_TYPE</span> === <span class="str">'ant'</span> &amp;&amp;
+  includeFirstPartyOnlyBetas &amp;&amp;
+  !<span class="fn">isEnvDefinedFalsy</span>(process.env.<span class="type">USE_CONNECTOR_TEXT_SUMMARIZATION</span>) &amp;&amp;
+  (<span class="fn">isEnvTruthy</span>(process.env.<span class="type">USE_CONNECTOR_TEXT_SUMMARIZATION</span>) ||
+    <span class="fn">getFeatureValue_CACHED_MAY_BE_STALE</span>(<span class="str">'tengu_slate_prism'</span>, <span class="bool">false</span>))
+) {
+  betaHeaders.<span class="fn">push</span>(<span class="type">SUMMARIZE_CONNECTOR_TEXT_BETA_HEADER</span>)
+}</pre>
+    </div>
+    <div class="prose rv rv-d2">
+      <p>This mechanism reuses the same <strong>signature infrastructure as thinking blocks</strong>. In the Anthropic API, extended thinking content is signed so that it can be verified and restored. Connector text piggybacks on this system:</p>
+    </div>
+
+    <div class="stream-flow rv rv-d2" style="margin-top:32px">
+      <div class="stream-step">
+        <div class="stream-dot active">1</div>
+        <div class="stream-content">
+          <div class="stream-label">Model generates reasoning text</div>
+          <div class="stream-desc">Full intermediate reasoning between tool calls (e.g., "The grep output shows 3 matches in utils.ts, I should read that file next...")</div>
+        </div>
+      </div>
+      <div class="stream-step">
+        <div class="stream-dot gold">2</div>
+        <div class="stream-content">
+          <div class="stream-label gold">Server summarizes + signs</div>
+          <div class="stream-desc">API server replaces full text with a compressed summary and attaches a cryptographic signature bound to the API key.</div>
+          <div class="stream-data">{ <span class="key">type</span>: <span class="str">"connector_text"</span>, <span class="key">connector_text</span>: <span class="str">"Found matches, reading file..."</span>, <span class="key">signature</span>: <span class="str">"sig_abc..."</span> }</div>
+        </div>
+      </div>
+      <div class="stream-step">
+        <div class="stream-dot rose">3</div>
+        <div class="stream-content">
+          <div class="stream-label rose">Client displays summary</div>
+          <div class="stream-desc">Claude Code renders the summarized text to the user. The full reasoning is hidden.</div>
+        </div>
+      </div>
+      <div class="stream-step">
+        <div class="stream-dot red">4</div>
+        <div class="stream-content">
+          <div class="stream-label red">Server restores on next turn</div>
+          <div class="stream-desc">When the signed block is sent back, the server verifies the signature and restores the original full text for model context continuity.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout warn rv rv-d3" style="margin-top:40px">
+      <div class="callout-title">Signature-Key Binding</div>
+      <p>Signatures are <strong>bound to the API key</strong> that generated them. When a user runs <code>/login</code> to switch accounts, Claude Code calls <code>stripSignatureBlocks()</code> to remove all connector_text and thinking blocks &mdash; because the stale signatures would be rejected by the API with a 400 error under the new key.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- LAYER 3: STREAMLINED OUTPUT TRANSFORM -->
+<section class="specs">
+  <div class="container">
+    <div class="sec-eyebrow rv">Layer 3</div>
+    <div class="sec-title rv">Streamlined Output Transform</div>
+    <div class="prose rv">
+      <p>The third layer is a <strong>client-side defense</strong> applied to the SDK output stream. When Claude Code operates in "streamlined mode" (e.g., when used through the Agent SDK), the output transformer replaces detailed tool call information with opaque summaries.</p>
+    </div>
+    <div class="code-block rv rv-d1">
+      <div class="code-block-header">
+        <span class="dot-r"></span><span class="dot-g"></span><span class="dot-v"></span>
+        <span class="label">src/utils/streamlinedTransform.ts:1-9</span>
+      </div>
+      <pre><span class="comment">/**
+ * Streamlined mode is a "distillation-resistant" output format that:
+ * - Keeps text messages intact
+ * - Summarizes tool calls with cumulative counts
+ * - Omits thinking content
+ * - Strips tool list and model info from init messages
+ */</span></pre>
+    </div>
+    <div class="prose rv rv-d2">
+      <p>Instead of seeing the exact tool names, parameters, and results, an SDK consumer receives aggregated summaries like:</p>
+    </div>
+    <div class="code-block rv rv-d2">
+      <div class="code-block-header">
+        <span class="dot-r"></span><span class="dot-g"></span><span class="dot-v"></span>
+        <span class="label">Original vs. Streamlined output</span>
+      </div>
+      <pre><span class="comment">// What the model actually did:</span>
+<span class="fn">Grep</span>(<span class="str">"handleError"</span>, <span class="str">"src/**/*.ts"</span>)  <span class="comment">// 3 results</span>
+<span class="fn">Read</span>(<span class="str">"src/utils/error.ts"</span>)              <span class="comment">// 142 lines</span>
+<span class="fn">Read</span>(<span class="str">"src/services/api.ts"</span>)             <span class="comment">// 89 lines</span>
+<span class="fn">Bash</span>(<span class="str">"npm test"</span>)                        <span class="comment">// exit 0</span>
+
+<span class="comment">// What streamlined mode emits:</span>
+{ <span class="key">type</span>: <span class="str">"streamlined_tool_use_summary"</span>,
+  <span class="key">tool_summary</span>: <span class="str">"Searched 1 pattern, read 2 files, ran 1 command"</span> }</pre>
+    </div>
+    <div class="prose rv rv-d3">
+      <p>The transformer categorizes all tools into five buckets &mdash; <strong>searches</strong> (Grep, Glob, WebSearch, LSP), <strong>reads</strong> (FileRead, ListMcpResources), <strong>writes</strong> (FileWrite, FileEdit, NotebookEdit), <strong>commands</strong> (shell, Tmux, TaskStop), and <strong>other</strong>. Counts accumulate across consecutive tool-only messages and reset when text content appears.</p>
+      <p>This means an attacker observing the SDK stream cannot reconstruct <em>which</em> files were read, <em>what</em> search patterns were used, or <em>what</em> commands were run &mdash; only the aggregate counts per category.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- FEATURE FLAG ARCHITECTURE -->
+<section>
+  <div class="container">
+    <div class="sec-eyebrow rv">Control</div>
+    <div class="sec-title rv">Feature Flag Architecture</div>
+    <div class="prose rv">
+      <p>All three defenses are gated behind a <strong>dual feature flag system</strong> &mdash; compile-time flags baked into the binary and runtime flags served remotely via GrowthBook. This creates a two-key system where both must agree before any defense activates.</p>
+    </div>
+    <div class="code-block rv rv-d1">
+      <div class="code-block-header">
+        <span class="dot-r"></span><span class="dot-g"></span><span class="dot-v"></span>
+        <span class="label">src/_stubs/bun-bundle.ts (public build)</span>
+      </div>
+      <pre><span class="comment">// Stub for bun:bundle feature() function</span>
+<span class="comment">// All features return false &mdash; matches external/public build behavior</span>
+<span class="key">export function</span> <span class="fn">feature</span>(<span class="type">_name</span>: <span class="type">string</span>): <span class="type">boolean</span> {
+  <span class="key">return</span> <span class="bool">false</span>
+}</pre>
+    </div>
+    <div class="prose rv rv-d2">
+      <p>In the public npm-distributed build, the <code>feature()</code> function is this stub that <strong>always returns <code>false</code></strong>. In Anthropic's internal Bun-compiled builds, the real <code>bun:bundle</code> module resolves feature flags at compile time, dead-code eliminating entire code paths when flags are off.</p>
+    </div>
+
+    <table class="layer-table rv rv-d3">
+      <thead><tr><th>Defense Layer</th><th>Compile Flag</th><th>Runtime Flag</th><th>Extra Gate</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><span class="layer-label l1">Fake Tools</span></td>
+          <td style="font-family:var(--font-mono);font-size:12px">ANTI_DISTILLATION_CC</td>
+          <td style="font-family:var(--font-mono);font-size:12px">tengu_anti_distill_fake_tool_injection</td>
+          <td style="font-size:13px">CLI entrypoint + 1P provider</td>
+        </tr>
+        <tr>
+          <td><span class="layer-label l2">Connector Text</span></td>
+          <td style="font-family:var(--font-mono);font-size:12px">CONNECTOR_TEXT</td>
+          <td style="font-family:var(--font-mono);font-size:12px">tengu_slate_prism</td>
+          <td style="font-size:13px">USER_TYPE=ant + 1P provider</td>
+        </tr>
+        <tr>
+          <td><span class="layer-label l3">Streamlined Output</span></td>
+          <td style="font-family:var(--font-mono);font-size:12px">N/A (always available)</td>
+          <td style="font-family:var(--font-mono);font-size:12px">N/A</td>
+          <td style="font-size:13px">SDK streamlined mode</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- DATA FLOW SUMMARY -->
+<section class="specs">
+  <div class="container">
+    <div class="sec-eyebrow rv">Summary</div>
+    <div class="sec-title rv">Complete Data Flow</div>
+    <p class="sec-desc rv">Putting it all together: how a single API round-trip is protected at every stage.</p>
+
+    <div class="stream-flow rv rv-d1">
+      <div class="stream-step">
+        <div class="stream-dot gold">&#9998;</div>
+        <div class="stream-content">
+          <div class="stream-label gold">1. Client sends request</div>
+          <div class="stream-desc">Claude Code includes <code style="font-size:11px;padding:2px 6px">anti_distillation: ['fake_tools']</code> in the request body, signaling the server to activate fake tool injection.</div>
+        </div>
+      </div>
+      <div class="stream-step">
+        <div class="stream-dot red">&#9888;</div>
+        <div class="stream-content">
+          <div class="stream-label red">2. Server injects fake tools</div>
+          <div class="stream-desc">The API server adds fabricated tool definitions to the tool list before passing to the model. The model may reference these tools, poisoning any recorded output.</div>
+        </div>
+      </div>
+      <div class="stream-step">
+        <div class="stream-dot active">&#9672;</div>
+        <div class="stream-content">
+          <div class="stream-label">3. Model generates response</div>
+          <div class="stream-desc">Claude generates reasoning text, tool calls, and results. Between tool calls, intermediate reasoning is produced as connector text.</div>
+        </div>
+      </div>
+      <div class="stream-step">
+        <div class="stream-dot rose">&#9998;</div>
+        <div class="stream-content">
+          <div class="stream-label rose">4. Server summarizes connector text</div>
+          <div class="stream-desc">Intermediate reasoning is replaced with signed summaries. Full text is only recoverable by the original API key holder on the next turn.</div>
+        </div>
+      </div>
+      <div class="stream-step">
+        <div class="stream-dot gold">&#9687;</div>
+        <div class="stream-content">
+          <div class="stream-label gold">5. Client transforms SDK output</div>
+          <div class="stream-desc">If in streamlined mode, the client further reduces tool calls to aggregate counts, stripping all parameter details and tool names.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- IMPLICATIONS -->
+<section>
+  <div class="container">
+    <div class="sec-eyebrow rv">Implications</div>
+    <div class="sec-title rv">What This Means</div>
+    <div class="prose rv">
+      <p><strong>For distillation attackers:</strong> Recording Claude Code API traffic for training data is now significantly degraded. Fake tools poison the training signal, summarized connector text hides the reasoning chain, and streamlined output removes tool specifics. A student model trained on this data would generate calls to nonexistent tools, lack intermediate reasoning capabilities, and have no understanding of actual tool schemas.</p>
+      <p><strong>For the open-source community:</strong> Since all defenses are compile-gated behind <code>feature()</code> stubs that return <code>false</code>, the public Claude Code build is completely unaffected. Users running the npm package or building from source get no anti-distillation overhead. The defense code is visible for analysis but inert.</p>
+      <p><strong>For Anthropic's internal users:</strong> The connector text summarization is currently gated to <code>USER_TYPE=ant</code> (Anthropic employees), suggesting it's still in the measurement/POC phase. The code comments reference monitoring TTFT (time to first token) and TTLT (time to last token), indicating Anthropic is evaluating the performance cost of server-side summarization before broader rollout.</p>
+    </div>
+    <div class="callout info rv rv-d1">
+      <div class="callout-title">The Naming Convention</div>
+      <p>The internal codenames follow a pattern: <code>tengu_</code> prefix for GrowthBook flags (tengu appears to be Claude Code's internal project name), <code>slate_prism</code> for the connector text experiment, and <code>fake_tool_injection</code> for the tool poisoning experiment. These names appear in analytics logging paths like <code>tengu_api_success</code> for A/B test analysis.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-line"></div>
+  <p>Claude Code Anti-Distillation Analysis &middot; Source: Claude Code Open Source</p>
+  <p style="margin-top:12px">&copy; 2026 <a href="../index.html">LocoreMind</a>. All rights reserved.</p>
+</footer>
+
+<script>
+const obs=new IntersectionObserver(es=>{
+  es.forEach(e=>{
+    if(!e.isIntersecting)return;
+    e.target.classList.add('vis');
+  });
+},{threshold:0.12});
+document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
+
+function toggleTheme(){
+  const html=document.documentElement;
+  html.classList.add('transitioning');
+  html.classList.toggle('light');
+  localStorage.setItem('theme',html.classList.contains('light')?'light':'dark');
+  setTimeout(()=>html.classList.remove('transitioning'),600);
+}
+</script>
+</body>
+</html>
