@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How Claude Code Tools Work | LocoreMind Blog</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='50' cy='50' r='50' fill='%23000000'/%3E%3Cpath d='M35 30V70H65' stroke='%23FFFFFF' stroke-width='12' fill='none' stroke-linecap='square'/%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0c0a14;--bg2:#120f1e;--bg3:#1a1528;
+  --text:#f0edf7;--text-dim:#a89ec0;--text-muted:#6b5f85;
+  --gold:#fbbf24;--amber:#f59e0b;--violet:#a78bfa;--purple:#7c3aed;
+  --rose:#f472b6;--fuchsia:#d946ef;
+  --grad1:linear-gradient(135deg,#fbbf24,#f59e0b,#f472b6,#a78bfa,#7c3aed);
+  --grad-hero:linear-gradient(135deg,#fbbf24,#f59e0b,#38bdf8,#3b82f6,#a78bfa,#7c3aed);
+  --grad2:linear-gradient(135deg,#fbbf24 0%,#a78bfa 100%);
+  --grad-soft:linear-gradient(135deg,rgba(251,191,36,0.12),rgba(167,139,250,0.12));
+  --border:rgba(167,139,250,0.15);
+  --orb1:rgba(251,191,36,0.08);--orb2:rgba(124,58,237,0.1);--orb3:rgba(244,114,182,0.06);
+  --card-hover-bg:rgba(167,139,250,0.03);
+  --font-display:'Sora',sans-serif;--font-mono:'DM Mono',monospace;
+}
+html.light{
+  --bg:#fffcf9;--bg2:#faf5f0;--bg3:#f3ecf8;
+  --text:#3b2e5a;--text-dim:#7b6e9a;--text-muted:#b0a6c8;
+  --gold:#d4a030;--amber:#c48d20;--violet:#b49aef;--purple:#9678e0;
+  --rose:#e8a0c8;
+  --grad1:linear-gradient(135deg,#f0d080,#f0c0d8,#d4b0f0,#b898e8);
+  --grad-hero:linear-gradient(135deg,#f0d080,#f0c0d8,#d4b0f0,#b898e8);
+  --grad2:linear-gradient(135deg,#f0d080 0%,#d4b0f0 100%);
+  --border:rgba(180,154,239,0.18);
+  --orb1:rgba(240,208,128,0.15);--orb2:rgba(180,152,232,0.12);--orb3:rgba(240,192,216,0.1);
+  --card-hover-bg:rgba(212,176,240,0.08);
+}
+html{scroll-behavior:smooth;background:var(--bg)}
+body{font-family:var(--font-display);color:var(--text);background:var(--bg);overflow-x:hidden;line-height:1.7}
+
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:rgba(167,139,250,0.3);border-radius:9px}
+
+/* ── Site nav ── */
+.site-nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 36px;display:flex;align-items:center;justify-content:space-between;
+  background:rgba(12,10,20,0.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+html.light .site-nav{background:rgba(255,252,249,0.85)}
+.site-nav-brand{font-family:var(--font-display);font-weight:700;font-size:18px;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:10px}
+.site-nav-brand svg{width:28px;height:28px}
+.site-nav-links{display:flex;align-items:center;gap:20px}
+.site-nav-links a{font-family:var(--font-mono);font-size:13px;color:var(--text-dim);text-decoration:none;transition:color 0.3s}
+.site-nav-links a:hover{color:var(--gold)}
+.site-nav-links .current{color:var(--gold)}
+
+/* ── Ambient orbs ── */
+.orb{position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:-1}
+.orb-1{width:600px;height:600px;background:var(--orb1);top:-200px;left:-100px;animation:drift1 20s ease-in-out infinite alternate}
+.orb-2{width:500px;height:500px;background:var(--orb2);bottom:-150px;right:-100px;animation:drift2 18s ease-in-out infinite alternate}
+.orb-3{width:400px;height:400px;background:var(--orb3);top:40%;left:50%;animation:drift3 22s ease-in-out infinite alternate}
+@keyframes drift1{0%{transform:translate(0,0)}100%{transform:translate(80px,60px)}}
+@keyframes drift2{0%{transform:translate(0,0)}100%{transform:translate(-60px,-80px)}}
+@keyframes drift3{0%{transform:translate(-50%,-50%)}100%{transform:translate(-40%,-40%)}}
+
+section{position:relative;padding:100px 0}
+.container{max-width:1140px;margin:0 auto;padding:0 36px}
+
+/* ── Gradient text ── */
+.gt{background:var(--grad1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-gt{background:var(--grad-hero);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+/* ═══ HERO ═══ */
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;position:relative;padding-top:80px}
+.hero-content{position:relative;z-index:2}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;padding:8px 20px;
+  background:rgba(167,139,250,0.08);border:1px solid rgba(167,139,250,0.25);
+  border-radius:100px;font-size:13px;color:var(--violet);letter-spacing:0.5px;
+  margin-bottom:40px;animation:fadeIn 1s ease both;font-family:var(--font-mono)}
+.hero-eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--violet);
+  animation:blink 2s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+.hero h1{font-weight:800;font-size:clamp(2.8rem,8vw,6rem);line-height:0.95;
+  letter-spacing:-3px;margin-bottom:24px;animation:fadeUp 1s 0.2s ease both}
+.hero-desc{font-size:clamp(1rem,2vw,1.2rem);color:var(--text-dim);max-width:600px;
+  margin:0 auto 56px;font-weight:300;line-height:1.8;animation:fadeUp 1s 0.4s ease both}
+.hero-meta{font-family:var(--font-mono);font-size:13px;color:var(--text-muted);
+  animation:fadeUp 1s 0.5s ease both;margin-bottom:36px}
+.hero-tags{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;animation:fadeUp 1s 0.6s ease both}
+.hero-tag{font-family:var(--font-mono);font-size:11px;padding:6px 16px;border-radius:100px;
+  background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.15);color:var(--gold)}
+.hero-tag.violet{background:rgba(167,139,250,0.08);border:1px solid rgba(167,139,250,0.15);color:var(--violet)}
+
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(32px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── Divider ── */
+.divider{height:1px;background:var(--grad2);opacity:0.2;margin:0 auto;max-width:600px}
+
+/* ═══ SECTION HEADERS ═══ */
+.sec-eyebrow{font-family:var(--font-mono);font-size:12px;letter-spacing:3px;text-transform:uppercase;
+  color:var(--gold);margin-bottom:12px}
+.sec-title{font-weight:800;font-size:clamp(1.8rem,4vw,2.8rem);letter-spacing:-1px;margin-bottom:20px}
+.sec-desc{color:var(--text-dim);font-weight:300;max-width:700px;margin-bottom:56px;font-size:15px;line-height:1.8}
+
+/* ═══ CODE BLOCKS ═══ */
+.code-block{background:var(--bg2);border:1px solid var(--border);border-radius:14px;
+  overflow:hidden;margin:32px 0}
+.code-block-header{display:flex;align-items:center;gap:8px;padding:14px 20px;
+  border-bottom:1px solid var(--border);font-family:var(--font-mono);font-size:11px;
+  color:var(--text-muted);letter-spacing:1px;text-transform:uppercase}
+.code-block-header .dot-r{width:8px;height:8px;border-radius:50%;background:var(--rose);opacity:0.6}
+.code-block-header .dot-g{width:8px;height:8px;border-radius:50%;background:var(--gold);opacity:0.6}
+.code-block-header .dot-v{width:8px;height:8px;border-radius:50%;background:var(--violet);opacity:0.6}
+.code-block-header span.label{margin-left:8px}
+.code-block pre{padding:24px;overflow-x:auto;font-family:var(--font-mono);font-size:13px;
+  line-height:1.9;color:var(--text-dim);tab-size:2}
+.code-block pre .key{color:var(--violet)}
+.code-block pre .str{color:var(--gold)}
+.code-block pre .comment{color:var(--text-muted);font-style:italic}
+.code-block pre .type{color:var(--rose)}
+.code-block pre .punct{color:var(--text-muted)}
+.code-block pre .arrow{color:var(--gold)}
+
+/* ═══ ARTICLE PROSE ═══ */
+.prose{max-width:760px;font-size:15px;color:var(--text-dim);line-height:1.8}
+.prose p{margin-bottom:24px}
+.prose strong{color:var(--text);font-weight:600}
+.prose code{font-family:var(--font-mono);font-size:12px;padding:3px 8px;border-radius:6px;
+  background:rgba(167,139,250,0.08);border:1px solid rgba(167,139,250,0.12);color:var(--violet)}
+
+/* ═══ ARCHITECTURE ═══ */
+.arch{padding:100px 0}
+.arch-flow{display:flex;align-items:stretch;gap:0;justify-content:center;flex-wrap:wrap}
+.arch-card{flex:1;min-width:200px;max-width:260px;padding:28px 24px;border-radius:16px;
+  border:1px solid var(--border);position:relative;overflow:hidden;
+  transition:all 0.4s ease;background:var(--bg2)}
+.arch-card::before{content:'';position:absolute;inset:-1px;border-radius:16px;padding:1px;
+  background:var(--grad1);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:opacity 0.4s}
+.arch-card:hover::before{opacity:1}
+.arch-card:hover{transform:translateY(-4px)}
+.arch-card-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;
+  justify-content:center;font-size:20px;margin-bottom:16px}
+.arch-card-icon.icon-user{background:color-mix(in srgb,var(--gold) 15%,transparent);color:var(--gold)}
+.arch-card-icon.icon-llm{background:color-mix(in srgb,var(--violet) 15%,transparent);color:var(--violet)}
+.arch-card-icon.icon-exec{background:color-mix(in srgb,var(--rose) 15%,transparent);color:var(--rose)}
+.arch-card-icon.icon-result{background:color-mix(in srgb,var(--gold) 15%,transparent);color:var(--gold)}
+.arch-card h3{font-weight:700;font-size:1.05rem;margin-bottom:4px}
+.arch-card .role{font-family:var(--font-mono);font-size:10px;letter-spacing:2px;
+  text-transform:uppercase;color:var(--text-muted);margin-bottom:12px}
+.arch-card p{font-size:13px;color:var(--text-dim);line-height:1.6}
+
+.arch-arrow{display:flex;align-items:center;padding:0 8px;flex-shrink:0}
+.arch-arrow svg{width:48px;height:24px}
+
+/* ═══ SPECS ═══ */
+.specs{background:var(--bg2)}
+.specs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
+.spec{padding:22px 24px;border-radius:12px;background:var(--bg);border:1px solid var(--border);
+  transition:all 0.35s ease}
+.spec:hover{border-color:rgba(251,191,36,0.3);transform:translateY(-2px)}
+.spec-k{font-family:var(--font-mono);font-size:11px;color:var(--text-muted);
+  letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px}
+.spec-v{font-weight:600;font-size:1.05rem}
+.spec-v.hl{background:var(--grad2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+/* ═══ PROVIDER TABLE ═══ */
+.prov-table{width:100%;border-collapse:collapse;margin-top:48px;font-size:14px}
+.prov-table th{text-align:left;padding:14px 18px;font-family:var(--font-mono);font-size:11px;
+  letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);font-weight:400;
+  border-bottom:1px solid var(--border)}
+.prov-table td{padding:14px 18px;border-bottom:1px solid var(--border)}
+.prov-table tr:hover td{background:var(--card-hover-bg)}
+.status-full{color:var(--gold);font-weight:600}
+.status-ok{color:var(--violet);font-weight:500}
+
+/* ═══ STREAM FLOW ═══ */
+.stream-flow{display:flex;flex-direction:column;gap:0;max-width:680px}
+.stream-step{display:flex;align-items:flex-start;gap:16px;padding:18px 0;position:relative}
+.stream-step:not(:last-child)::after{content:'';position:absolute;left:15px;top:52px;bottom:0;
+  width:1px;background:var(--border)}
+.stream-dot{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;font-size:12px;font-family:var(--font-mono);border:1px solid var(--border);
+  background:var(--bg2);color:var(--text-muted);position:relative;z-index:1}
+.stream-dot.active{border-color:var(--violet);color:var(--violet);background:rgba(167,139,250,0.08)}
+.stream-dot.done{border-color:var(--gold);color:var(--gold);background:rgba(251,191,36,0.08)}
+.stream-content{flex:1}
+.stream-event{font-family:var(--font-mono);font-size:13px;color:var(--violet);margin-bottom:4px}
+.stream-data{font-family:var(--font-mono);font-size:12px;color:var(--text-muted);line-height:1.6;
+  padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:8px}
+.stream-data .key{color:var(--violet)}
+.stream-data .str{color:var(--gold)}
+
+/* ═══ FOOTER ═══ */
+footer{text-align:center;padding:64px 36px;font-size:13px;color:var(--text-muted)}
+footer a{color:var(--violet);text-decoration:none;transition:color 0.3s}
+footer a:hover{color:var(--gold)}
+footer .footer-line{width:60px;height:2px;background:var(--grad2);margin:0 auto 20px;border-radius:1px}
+
+/* ═══ REVEAL ═══ */
+.rv{opacity:0;transform:translateY(36px);transition:all 0.9s cubic-bezier(0.22,1,0.36,1)}
+.rv.vis{opacity:1;transform:translateY(0)}
+.rv-d1{transition-delay:0.08s}.rv-d2{transition-delay:0.16s}
+.rv-d3{transition-delay:0.24s}.rv-d4{transition-delay:0.32s}
+
+@media(max-width:768px){
+  .container{padding:0 20px}
+  section{padding:64px 0}
+  .arch-flow{flex-direction:column;align-items:center;gap:20px}
+  .arch-card{max-width:100%;min-width:0}
+  .arch-arrow{transform:rotate(90deg);padding:8px 0}
+  .code-block pre{font-size:11px;padding:16px}
+  .site-nav{padding:12px 20px}
+  .stream-flow{gap:0}
+}
+
+/* ═══ THEME TOGGLE ═══ */
+.theme-toggle{width:36px;height:36px;
+  border-radius:50%;border:1px solid var(--border);background:var(--bg2);
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:all 0.4s ease}
+.theme-toggle:hover{transform:scale(1.1);border-color:var(--violet)}
+.theme-toggle svg{width:18px;height:18px;transition:all 0.4s ease}
+.theme-toggle .icon-sun{display:none;fill:var(--gold)}
+.theme-toggle .icon-moon{display:block;fill:var(--violet)}
+html.light .theme-toggle .icon-sun{display:block}
+html.light .theme-toggle .icon-moon{display:none}
+
+html.transitioning,html.transitioning *,html.transitioning *::before,html.transitioning *::after{
+  transition:background 0.5s ease,color 0.5s ease,border-color 0.5s ease,box-shadow 0.5s ease !important}
+</style>
+<script>if(localStorage.getItem('theme')==='light')document.documentElement.classList.add('light')</script>
+</head>
+<body>
+
+<!-- ═══ SITE NAV ═══ -->
+<nav class="site-nav">
+  <a href="../index.html" class="site-nav-brand">
+    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="50" fill="currentColor"/><path d="M35 30V70H65" stroke="var(--bg)" stroke-width="12" fill="none" stroke-linecap="square"/></svg>
+    LocoreMind
+  </a>
+  <div class="site-nav-links">
+    <a href="../index.html">Home</a>
+    <a href="index.html" class="current">Blog</a>
+    <a href="https://github.com/LocoreMind" target="_blank">GitHub ↗</a>
+    <a href="https://huggingface.co/LocoreMind" target="_blank">HuggingFace ↗</a>
+    <button class="theme-toggle" aria-label="Toggle theme" onclick="toggleTheme()">
+      <svg class="icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <svg class="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3" stroke="var(--gold)" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="21" x2="12" y2="23" stroke="var(--gold)" stroke-width="2" stroke-linecap="round"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" stroke="var(--gold)" stroke-width="2" stroke-linecap="round"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" stroke="var(--gold)" stroke-width="2" stroke-linecap="round"/><line x1="1" y1="12" x2="3" y2="12" stroke="var(--gold)" stroke-width="2" stroke-linecap="round"/><line x1="21" y1="12" x2="23" y2="12" stroke="var(--gold)" stroke-width="2" stroke-linecap="round"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36" stroke="var(--gold)" stroke-width="2" stroke-linecap="round"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" stroke="var(--gold)" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+</nav>
+
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-eyebrow"><span class="dot"></span> Deep Dive</div>
+    <h1>How <span class="hero-gt">Claude Code</span><br>Tools Work</h1>
+    <p class="hero-desc">A deep dive into the tool system architecture from Claude Code's open source — how tools are defined, sent to the LLM, and processed back.</p>
+    <div class="hero-meta">April 1, 2026 · 10 min read</div>
+    <div class="hero-tags">
+      <span class="hero-tag violet">Claude Code</span>
+      <span class="hero-tag">Tool Use</span>
+      <span class="hero-tag violet">Source Analysis</span>
+      <span class="hero-tag">Anthropic API</span>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══ OVERVIEW ═══ -->
+<section>
+  <div class="container">
+    <div class="sec-eyebrow rv">Overview</div>
+    <div class="sec-title rv">Tool Architecture</div>
+    <div class="prose rv">
+      <p><strong>Claude Code</strong> is Anthropic's official CLI tool for AI-assisted software engineering. We analyzed its open-source code to understand how it defines, sends, and processes tool calls with the LLM.</p>
+      <p>The tool system is built on three layers: <strong>Tool Definition</strong> (Zod schemas converted to JSON Schema), <strong>API Transport</strong> (native Anthropic Messages API with streaming), and <strong>Result Processing</strong> (execution + result mapping back to the conversation). Each layer is cleanly separated, enabling concurrent tool execution, permission gating, and large-output persistence.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══ TOOL DEFINITION ═══ -->
+<section class="specs">
+  <div class="container">
+    <div class="sec-eyebrow rv">Definition</div>
+    <div class="sec-title rv">How Tools Are Defined</div>
+    <div class="prose rv">
+      <p>Each tool — Bash, Read, Write, Edit, Glob, Grep, Task, and more — implements the <code>Tool&lt;Input, Output&gt;</code> interface. Schemas are authored in <strong>Zod</strong> and converted to JSON Schema at runtime via <code>zodToJsonSchema()</code> before being sent to the API.</p>
+    </div>
+    <div class="code-block rv rv-d1">
+      <div class="code-block-header">
+        <span class="dot-r"></span><span class="dot-g"></span><span class="dot-v"></span>
+        <span class="label">Tool Interface — src/Tool.ts</span>
+      </div>
+      <pre><span class="type">Tool</span>&lt;<span class="type">Input</span>, <span class="type">Output</span>&gt; = {
+  <span class="key">name</span>: <span class="type">string</span>
+  <span class="key">description</span>: <span class="type">string</span>
+  <span class="key">inputSchema</span>: <span class="type">ZodSchema</span>  <span class="arrow">→</span>  <span class="type">JSON Schema</span>
+  <span class="key">call</span>(input, context)  <span class="arrow">→</span>  <span class="type">ToolResult</span>
+  <span class="key">mapToolResultToToolResultBlockParam</span>()
+  <span class="key">isReadOnly</span>(): <span class="type">boolean</span>
+  <span class="key">isConcurrencySafe</span>(): <span class="type">boolean</span>
+  <span class="key">maxResultSizeChars</span>: <span class="type">number</span>
+}</pre>
+    </div>
+    <div class="prose rv rv-d2">
+      <p>Tools also declare <strong>concurrency safety</strong> and <strong>read-only</strong> properties. When the LLM returns multiple <code>tool_use</code> blocks in a single message, Claude Code checks these flags to decide which tools can run in parallel and which must execute sequentially.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══ API REQUEST FORMAT ═══ -->
+<section>
+  <div class="container">
+    <div class="sec-eyebrow rv">Transport</div>
+    <div class="sec-title rv">API Request Format</div>
+    <div class="prose rv">
+      <p>Tools are sent as a <strong>native JSON array</strong> via the Anthropic SDK's <code>tools</code> parameter — NOT embedded as text in the prompt. This is fundamentally different from ChatML-based systems where tool definitions are serialized into the prompt text with special tokens.</p>
+    </div>
+    <div class="code-block rv rv-d1">
+      <div class="code-block-header">
+        <span class="dot-r"></span><span class="dot-g"></span><span class="dot-v"></span>
+        <span class="label">API Request — messages.create()</span>
+      </div>
+      <pre>{
+  <span class="key">"model"</span>: <span class="str">"claude-opus-4.5-20251101"</span>,
+  <span class="key">"system"</span>: [{ <span class="key">"type"</span>: <span class="str">"text"</span>, <span class="key">"text"</span>: <span class="str">"You are Claude Code..."</span> }],
+  <span class="key">"tools"</span>: [{
+    <span class="key">"name"</span>: <span class="str">"bash"</span>,
+    <span class="key">"description"</span>: <span class="str">"Execute bash commands..."</span>,
+    <span class="key">"input_schema"</span>: { <span class="key">"type"</span>: <span class="str">"object"</span>, ... }
+  }],
+  <span class="key">"messages"</span>: [
+    { <span class="key">"role"</span>: <span class="str">"user"</span>, <span class="key">"content"</span>: <span class="str">"List files in current directory"</span> }
+  ],
+  <span class="key">"thinking"</span>: { <span class="key">"type"</span>: <span class="str">"adaptive"</span> },
+  <span class="key">"betas"</span>: [<span class="str">"interleaved-thinking-2025-05-14"</span>, <span class="str">"..."</span>]
+}</pre>
+    </div>
+    <div class="prose rv rv-d2">
+      <p>The raw token-level prompt format is handled <strong>server-side by Anthropic</strong> and never exposed to the client. Claude's API doesn't use <code>&lt;|im_start|&gt;</code> markers or ChatML — the SDK sends structured JSON over HTTP, and the model's internal prompt encoding is an implementation detail.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══ STREAMING ═══ -->
+<section class="specs">
+  <div class="container">
+    <div class="sec-eyebrow rv">Response</div>
+    <div class="sec-title rv">Streaming Tool Calls</div>
+    <div class="prose rv">
+      <p>The LLM streams tool input as <strong>incremental JSON fragments</strong>. Claude Code accumulates these deltas and parses the complete input only at <code>content_block_stop</code>. Each completed block is yielded immediately to the UI for responsive streaming.</p>
+    </div>
+    <div class="stream-flow rv rv-d1">
+      <div class="stream-step">
+        <div class="stream-dot active">1</div>
+        <div class="stream-content">
+          <div class="stream-event">content_block_start</div>
+          <div class="stream-data">{ <span class="key">type</span>: <span class="str">"tool_use"</span>, <span class="key">name</span>: <span class="str">"bash"</span>, <span class="key">id</span>: <span class="str">"toolu_..."</span> }</div>
+        </div>
+      </div>
+      <div class="stream-step">
+        <div class="stream-dot">2</div>
+        <div class="stream-content">
+          <div class="stream-event">content_block_delta</div>
+          <div class="stream-data">{ <span class="key">partial_json</span>: <span class="str">'{"command"'</span> }</div>
+        </div>
+      </div>
+      <div class="stream-step">
+        <div class="stream-dot">3</div>
+        <div class="stream-content">
+          <div class="stream-event">content_block_delta</div>
+          <div class="stream-data">{ <span class="key">partial_json</span>: <span class="str">':"ls -la"}'</span> }</div>
+        </div>
+      </div>
+      <div class="stream-step">
+        <div class="stream-dot done">4</div>
+        <div class="stream-content">
+          <div class="stream-event">content_block_stop</div>
+          <div class="stream-data"><span class="comment">// Parse accumulated JSON → { "command": "ls -la" }</span></div>
+        </div>
+      </div>
+      <div class="stream-step">
+        <div class="stream-dot done">5</div>
+        <div class="stream-content">
+          <div class="stream-event">message_delta</div>
+          <div class="stream-data">{ <span class="key">stop_reason</span>: <span class="str">"tool_use"</span> }</div>
+        </div>
+      </div>
+    </div>
+    <div class="prose rv rv-d2" style="margin-top:40px">
+      <p>The model can return <strong>multiple <code>tool_use</code> blocks</strong> in a single message for parallel execution. Claude Code checks each tool's concurrency flags before dispatching them simultaneously.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══ TOOL RESULT ═══ -->
+<section>
+  <div class="container">
+    <div class="sec-eyebrow rv">Execution</div>
+    <div class="sec-title rv">Tool Result Flow</div>
+    <div class="prose rv">
+      <p>Tool results are sent back as <strong>user messages</strong> with <code>tool_result</code> blocks. Each result references the original <code>tool_use</code> by ID. If output exceeds <code>maxResultSizeChars</code>, it's persisted to disk and replaced with a size summary.</p>
+    </div>
+    <div class="code-block rv rv-d1">
+      <div class="code-block-header">
+        <span class="dot-r"></span><span class="dot-g"></span><span class="dot-v"></span>
+        <span class="label">Tool Result — sent as user message</span>
+      </div>
+      <pre>{
+  <span class="key">"role"</span>: <span class="str">"user"</span>,
+  <span class="key">"content"</span>: [{
+    <span class="key">"type"</span>: <span class="str">"tool_result"</span>,
+    <span class="key">"tool_use_id"</span>: <span class="str">"toolu_xxx"</span>,
+    <span class="key">"content"</span>: <span class="str">"file1.txt\nfile2.txt\nfile3.txt"</span>,
+    <span class="key">"is_error"</span>: <span class="type">false</span>
+  }]
+}</pre>
+    </div>
+    <div class="prose rv rv-d2">
+      <p>Error results set <code>is_error: true</code>, signaling the LLM to adjust its approach. Large outputs (common with Bash and Grep) trigger the <strong>persistence layer</strong> — the full result is written to a temporary file, and the API receives only a pointer: <code>[Tool output saved to file. Original size: 125KB]</code>.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══ COMPLETE CYCLE ═══ -->
+<section class="arch">
+  <div class="container">
+    <div class="sec-eyebrow rv">Lifecycle</div>
+    <div class="sec-title rv">Complete Tool Cycle</div>
+    <p class="sec-desc rv">A single tool-use turn flows through four stages. The loop repeats until the model responds with text instead of a tool call.</p>
+    <div class="arch-flow">
+      <div class="arch-card rv">
+        <div class="arch-card-icon icon-user">&#9998;</div>
+        <h3>User Input</h3>
+        <div class="role">role: user</div>
+        <p>Natural language request sent as a user message to the API.</p>
+      </div>
+      <div class="arch-arrow rv">
+        <svg viewBox="0 0 48 24"><path d="M0 12 L32 12" stroke="url(#ag1)" stroke-width="2" fill="none" stroke-dasharray="4 4"><animate attributeName="stroke-dashoffset" from="8" to="0" dur="0.8s" repeatCount="indefinite"/></path><polygon points="32,7 44,12 32,17" fill="var(--violet)"/><defs><linearGradient id="ag1" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="var(--gold)"/><stop offset="100%" stop-color="var(--violet)"/></linearGradient></defs></svg>
+      </div>
+      <div class="arch-card rv rv-d1">
+        <div class="arch-card-icon icon-llm">&#9672;</div>
+        <h3 class="gt">LLM Response</h3>
+        <div class="role">tool_use blocks</div>
+        <p>Model returns one or more tool_use blocks with name and JSON input.</p>
+      </div>
+      <div class="arch-arrow rv rv-d1">
+        <svg viewBox="0 0 48 24"><path d="M0 12 L32 12" stroke="url(#ag2)" stroke-width="2" fill="none" stroke-dasharray="4 4"><animate attributeName="stroke-dashoffset" from="8" to="0" dur="0.8s" repeatCount="indefinite"/></path><polygon points="32,7 44,12 32,17" fill="var(--violet)"/><defs><linearGradient id="ag2" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="var(--gold)"/><stop offset="100%" stop-color="var(--violet)"/></linearGradient></defs></svg>
+      </div>
+      <div class="arch-card rv rv-d2">
+        <div class="arch-card-icon icon-exec">&#9881;</div>
+        <h3>Tool Execution</h3>
+        <div class="role">Local Runtime</div>
+        <p>Tool runs locally with permission checks, concurrency control, and progress streaming.</p>
+      </div>
+      <div class="arch-arrow rv rv-d2">
+        <svg viewBox="0 0 48 24"><path d="M0 12 L32 12" stroke="url(#ag3)" stroke-width="2" fill="none" stroke-dasharray="4 4"><animate attributeName="stroke-dashoffset" from="8" to="0" dur="0.8s" repeatCount="indefinite"/></path><polygon points="32,7 44,12 32,17" fill="var(--violet)"/><defs><linearGradient id="ag3" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="var(--gold)"/><stop offset="100%" stop-color="var(--violet)"/></linearGradient></defs></svg>
+      </div>
+      <div class="arch-card rv rv-d3">
+        <div class="arch-card-icon icon-result">&#8634;</div>
+        <h3>Result Return</h3>
+        <div class="role">tool_result → next turn</div>
+        <p>Output sent back as a user message. LLM continues or responds with text.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══ BETA FEATURES & PROVIDERS ═══ -->
+<section class="specs">
+  <div class="container">
+    <div class="sec-eyebrow rv">Ecosystem</div>
+    <div class="sec-title rv">Beta Features &amp; Providers</div>
+    <p class="sec-desc rv">Claude Code leverages 19+ Anthropic beta headers for advanced capabilities. These are all Anthropic-specific and not available through third-party providers.</p>
+    <div class="specs-grid">
+      <div class="spec rv"><div class="spec-k">Extended Thinking</div><div class="spec-v hl">interleaved-thinking</div></div>
+      <div class="spec rv"><div class="spec-k">1M Context</div><div class="spec-v">context-1m</div></div>
+      <div class="spec rv"><div class="spec-k">Tool Search</div><div class="spec-v">deferred loading</div></div>
+      <div class="spec rv"><div class="spec-k">Efficient Tools</div><div class="spec-v hl">FC v3 format</div></div>
+      <div class="spec rv"><div class="spec-k">Prompt Caching</div><div class="spec-v">global scope</div></div>
+      <div class="spec rv"><div class="spec-k">Structured Output</div><div class="spec-v">JSON schema</div></div>
+      <div class="spec rv"><div class="spec-k">Fast Mode</div><div class="spec-v">speed: fast</div></div>
+      <div class="spec rv"><div class="spec-k">Context Mgmt</div><div class="spec-v">auto-clearing</div></div>
+    </div>
+
+    <table class="prov-table rv">
+      <thead><tr><th>Provider</th><th>SDK</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td style="color:var(--gold)">Anthropic 1P</td><td style="font-family:var(--font-mono);font-size:13px">@anthropic-ai/sdk</td><td><span class="status-full">Full Support</span></td></tr>
+        <tr><td>AWS Bedrock</td><td style="font-family:var(--font-mono);font-size:13px">@anthropic-ai/bedrock-sdk</td><td><span class="status-ok">Supported</span></td></tr>
+        <tr><td>Google Vertex</td><td style="font-family:var(--font-mono);font-size:13px">@anthropic-ai/vertex-sdk</td><td><span class="status-ok">Supported</span></td></tr>
+        <tr><td>Azure Foundry</td><td style="font-family:var(--font-mono);font-size:13px">@anthropic-ai/foundry-sdk</td><td><span class="status-ok">Supported</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-line"></div>
+  <p>Claude Code Tools Analysis · <a href="https://github.com/IIIIQIIII/claude-code" target="_blank">Claude Code on GitHub</a></p>
+  <p style="margin-top:12px">&copy; 2026 <a href="../index.html">LocoreMind</a>. All rights reserved.</p>
+</footer>
+
+<script>
+const obs=new IntersectionObserver(es=>{
+  es.forEach(e=>{
+    if(!e.isIntersecting)return;
+    e.target.classList.add('vis');
+  });
+},{threshold:0.12});
+document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
+
+function toggleTheme(){
+  const html=document.documentElement;
+  html.classList.add('transitioning');
+  html.classList.toggle('light');
+  localStorage.setItem('theme',html.classList.contains('light')?'light':'dark');
+  setTimeout(()=>html.classList.remove('transitioning'),600);
+}
+</script>
+</body>
+</html>
