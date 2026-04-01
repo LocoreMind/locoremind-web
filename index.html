@@ -61,18 +61,19 @@
                         serif: ['Playfair Display', 'serif'],
                     },
                     colors: {
-                        primary: '#14b8a6',
-                        secondary: '#0d9488',
-                        accent: '#2dd4bf',
+                        surface: {
+                            50: '#fffcf9',
+                            100: '#faf5f0',
+                            150: '#f3ecf8',
+                            800: '#120f1e',
+                            900: '#0c0a14',
+                        },
                     }
                 }
             }
         }
     </script>
     <style>
-        .gradient-bg {
-            background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 50%, #f0f9ff 100%);
-        }
         .card-hover {
             transition: all 0.3s ease;
         }
@@ -80,30 +81,35 @@
             transform: translateY(-2px);
             box-shadow: 0 20px 40px rgba(0,0,0,0.08);
         }
-        .text-gradient {
-            background: linear-gradient(135deg, #0d9488 0%, #14b8a6 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .dark .card-hover:hover {
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        .hero-gradient {
+            color: #7c3aed;
+        }
+        .dark .hero-gradient {
+            color: #a78bfa;
         }
         .glass-effect {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(10px);
+            background: rgba(255, 252, 249, 0.85);
+            backdrop-filter: blur(12px);
         }
         .dark .glass-effect {
-            background: rgba(17, 24, 39, 0.8);
+            background: rgba(12, 10, 20, 0.85);
         }
     </style>
 </head>
-<body class="bg-stone-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
+<body class="bg-surface-50 dark:bg-surface-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
 
     <!-- Navigation -->
-    <nav class="fixed w-full z-50 glass-effect border-b border-gray-200 dark:border-gray-800">
+    <nav class="fixed w-full z-50 glass-effect border-b border-gray-200 dark:border-purple-900/30">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <div class="flex items-center">
                     <span class="font-serif text-2xl font-semibold text-gray-900 dark:text-white">LocoreMind</span>
                 </div>
                 <div class="hidden md:flex items-center space-x-8">
+                    <a href="https://app.locoremind.com" target="_blank" class="text-sm font-medium text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-300 transition">Tools</a>
                     <a href="blog/index.html" class="text-sm text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition">Blog</a>
                     <a href="https://github.com/LocoreMind" target="_blank" class="text-sm text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition flex items-center gap-1">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
@@ -128,19 +134,19 @@
     <section class="pt-32 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div class="text-center space-y-6">
             <h1 class="font-serif text-5xl md:text-6xl font-bold text-gray-900 dark:text-white leading-tight">
-                Your Local Brain for<br>
+                Your <span class="hero-gradient">Local Brain</span> for<br>
                 <span class="text-4xl md:text-5xl">Claude Code, OpenClaw & Beyond</span>
             </h1>
             <p class="max-w-2xl mx-auto text-lg text-gray-600 dark:text-gray-400">
                 Small models purpose-trained for agentic AI — drop into any agentic framework and run fully on your own hardware. No API bills. No data leaving your machine.
             </p>
-            <div class="max-w-xl mx-auto mt-8">
-                <div class="relative">
-                    <input type="text" placeholder="ollama run locoremodel" class="w-full px-6 py-4 rounded-2xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50 shadow-lg font-mono text-sm">
-                    <button class="absolute right-3 top-1/2 -translate-y-1/2 p-2 bg-gray-100 dark:bg-gray-700 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-600 transition">
-                        <svg class="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
-                    </button>
-                </div>
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8">
+                <a href="https://app.locoremind.com" target="_blank" class="px-8 py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-semibold rounded-full hover:bg-gray-800 dark:hover:bg-gray-100 transition shadow-lg">
+                    Get Started
+                </a>
+                <a href="https://github.com/LocoreMind" target="_blank" class="px-8 py-3 border-2 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white font-semibold rounded-full hover:border-gray-900 dark:hover:border-white transition">
+                    View on GitHub
+                </a>
             </div>
         </div>
     </section>
@@ -148,39 +154,39 @@
     <!-- Features Grid -->
     <section class="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto mb-20">
         <div class="grid md:grid-cols-2 gap-6">
-            <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-green-400 to-yellow-300 p-8 card-hover">
+            <div class="relative overflow-hidden rounded-3xl bg-surface-100 dark:bg-surface-800 border border-gray-200 dark:border-purple-900/30 p-8 card-hover">
                 <div class="relative z-10 space-y-4">
                     <div class="space-y-2">
-                        <div class="flex items-center space-x-3 bg-white/90 dark:bg-gray-900/90 backdrop-blur px-4 py-3 rounded-xl">
-                            <svg class="w-5 h-5 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        <div class="flex items-center space-x-3 bg-white dark:bg-surface-900 px-4 py-3 rounded-xl border border-gray-200 dark:border-purple-900/30">
+                            <svg class="w-5 h-5 text-purple-500 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                             <div>
                                 <div class="font-semibold text-gray-900 dark:text-white">Claude Code</div>
                                 <div class="text-sm text-gray-600 dark:text-gray-400">Drop-in local model backend</div>
                             </div>
                         </div>
-                        <div class="flex items-center space-x-3 bg-white/90 dark:bg-gray-900/90 backdrop-blur px-4 py-3 rounded-xl">
-                            <svg class="w-5 h-5 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17H3a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012 2v10a2 2 0 01-2 2h-2"></path></svg>
+                        <div class="flex items-center space-x-3 bg-white dark:bg-surface-900 px-4 py-3 rounded-xl border border-gray-200 dark:border-purple-900/30">
+                            <svg class="w-5 h-5 text-purple-500 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17H3a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012 2v10a2 2 0 01-2 2h-2"></path></svg>
                             <div>
                                 <div class="font-semibold text-gray-900 dark:text-white">OpenClaw</div>
                                 <div class="text-sm text-gray-600 dark:text-gray-400">General-purpose local agent</div>
                             </div>
                         </div>
-                        <div class="flex items-center space-x-3 bg-white/90 dark:bg-gray-900/90 backdrop-blur px-4 py-3 rounded-xl">
-                            <svg class="w-5 h-5 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        <div class="flex items-center space-x-3 bg-white dark:bg-surface-900 px-4 py-3 rounded-xl border border-gray-200 dark:border-purple-900/30">
+                            <svg class="w-5 h-5 text-purple-500 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                             <div>
                                 <div class="font-semibold text-gray-900 dark:text-white">Agentic Training</div>
                                 <div class="text-sm text-gray-600 dark:text-gray-400">Tool use, planning, long-context</div>
                             </div>
                         </div>
-                        <div class="flex items-center space-x-3 bg-white/90 dark:bg-gray-900/90 backdrop-blur px-4 py-3 rounded-xl">
-                            <svg class="w-5 h-5 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                        <div class="flex items-center space-x-3 bg-white dark:bg-surface-900 px-4 py-3 rounded-xl border border-gray-200 dark:border-purple-900/30">
+                            <svg class="w-5 h-5 text-purple-500 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
                             <div>
                                 <div class="font-semibold text-gray-900 dark:text-white">Fully Private</div>
                                 <div class="text-sm text-gray-600 dark:text-gray-400">Nothing leaves your machine</div>
                             </div>
                         </div>
-                        <div class="flex items-center space-x-3 bg-white/90 dark:bg-gray-900/90 backdrop-blur px-4 py-3 rounded-xl">
-                            <svg class="w-5 h-5 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"></path></svg>
+                        <div class="flex items-center space-x-3 bg-white dark:bg-surface-900 px-4 py-3 rounded-xl border border-gray-200 dark:border-purple-900/30">
+                            <svg class="w-5 h-5 text-purple-500 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"></path></svg>
                             <div>
                                 <div class="font-semibold text-gray-900 dark:text-white">Ollama Compatible</div>
                                 <div class="text-sm text-gray-600 dark:text-gray-400">One command to run locally</div>
@@ -189,8 +195,8 @@
                     </div>
                 </div>
             </div>
-            <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-sky-200 to-green-200 p-8 card-hover">
-                <div class="bg-white/95 dark:bg-gray-900/95 backdrop-blur rounded-2xl p-6 shadow-xl">
+            <div class="relative overflow-hidden rounded-3xl bg-surface-100 dark:bg-surface-800 border border-gray-200 dark:border-purple-900/30 p-8 card-hover">
+                <div class="bg-white dark:bg-surface-900 rounded-2xl p-6 border border-gray-200 dark:border-purple-900/30">
                     <div class="text-xs font-semibold text-gray-500 mb-2">CLAUDE CODE + LOCOREMODEL</div>
                     <div class="font-medium text-gray-900 dark:text-white mb-4 font-mono text-sm">$ claude --model locoremodel:14b</div>
                     <div class="space-y-2 text-sm">
@@ -219,24 +225,18 @@
     <!-- Three Pillars -->
     <section class="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto mb-20">
         <div class="grid md:grid-cols-3 gap-6">
-            <div class="bg-stone-100 dark:bg-gray-800 rounded-2xl p-8 card-hover">
-                <div class="w-12 h-12 mb-4 rounded-full bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center">
-                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                </div>
+            <div class="bg-surface-100 dark:bg-surface-800 rounded-2xl p-8 card-hover">
+                <svg class="w-7 h-7 mb-4 text-purple-500 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                 <h3 class="font-serif text-xl font-semibold mb-2">Agentic Training</h3>
                 <p class="text-sm text-gray-600 dark:text-gray-400">LocoreModel is trained specifically on agentic tasks — tool calling, multi-step planning, instruction following across long contexts. Not a general chat model repurposed for agents.</p>
             </div>
-            <div class="bg-stone-100 dark:bg-gray-800 rounded-2xl p-8 card-hover">
-                <div class="w-12 h-12 mb-4 rounded-full bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center">
-                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                </div>
+            <div class="bg-surface-100 dark:bg-surface-800 rounded-2xl p-8 card-hover">
+                <svg class="w-7 h-7 mb-4 text-purple-500 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 <h3 class="font-serif text-xl font-semibold mb-2">Runs Where You Are</h3>
                 <p class="text-sm text-gray-600 dark:text-gray-400">Small enough to run on a MacBook or a home server. Quantized variants for every hardware tier. Plug into Claude Code or OpenClaw via Ollama's OpenAI-compatible endpoint — no code changes needed.</p>
             </div>
-            <div class="bg-stone-100 dark:bg-gray-800 rounded-2xl p-8 card-hover">
-                <div class="w-12 h-12 mb-4 rounded-full bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center">
-                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                </div>
+            <div class="bg-surface-100 dark:bg-surface-800 rounded-2xl p-8 card-hover">
+                <svg class="w-7 h-7 mb-4 text-purple-500 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                 <h3 class="font-serif text-xl font-semibold mb-2">Break Free from Big APIs</h3>
                 <p class="text-sm text-gray-600 dark:text-gray-400">Stop paying per token to run your agents. No rate limits, no outages, no terms-of-service restrictions. Your agent, your model, your machine.</p>
             </div>
@@ -253,27 +253,25 @@
         <div class="mb-16">
             <div class="grid md:grid-cols-2 gap-6">
                 <!-- LocoTrainer -->
-                <div class="bg-gradient-to-br from-amber-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl p-8 card-hover border border-amber-200 dark:border-purple-900">
+                <div class="bg-surface-100 dark:bg-surface-800 rounded-2xl p-8 card-hover border border-gray-200 dark:border-purple-900/30">
                     <div class="flex items-start justify-between mb-4">
                         <div class="flex items-center gap-3">
-                            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-400 to-purple-500 flex items-center justify-center">
-                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                            </div>
+                            <svg class="w-7 h-7 text-purple-500 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                             <div>
                                 <h4 class="font-bold text-xl">LocoTrainer</h4>
                                 <p class="text-xs text-gray-600 dark:text-gray-400">MS-SWIFT Domain Expert</p>
                             </div>
                         </div>
-                        <span class="px-3 py-1 bg-amber-500 text-white text-xs font-semibold rounded-full">New</span>
+                        <span class="px-3 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 text-xs font-semibold rounded-full">New</span>
                     </div>
                     <p class="text-sm text-gray-700 dark:text-gray-300 mb-4">
                         A 4B-parameter specialized code analysis agent distilled from Qwen3-Coder-Next. Analyzes MS-SWIFT codebases and generates comprehensive markdown reports with tool-calling capabilities and deep framework knowledge.
                     </p>
                     <div class="flex flex-wrap gap-2 mb-4">
-                        <span class="px-2 py-1 bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 text-xs rounded-md">4B params</span>
-                        <span class="px-2 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 text-xs rounded-md">Tool Calling</span>
-                        <span class="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 text-xs rounded-md">32K Context</span>
-                        <span class="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 text-xs rounded-md">Local GGUF</span>
+                        <span class="px-2 py-1 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs rounded-md">4B params</span>
+                        <span class="px-2 py-1 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs rounded-md">Tool Calling</span>
+                        <span class="px-2 py-1 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs rounded-md">32K Context</span>
+                        <span class="px-2 py-1 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs rounded-md">Local GGUF</span>
                     </div>
                     <div class="flex gap-3">
                         <a href="https://github.com/LocoreMind/LocoTrainer" target="_blank" class="flex items-center gap-1 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition">
@@ -292,12 +290,10 @@
                 </div>
 
                 <!-- LocoOperator -->
-                <div class="bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl p-8 card-hover border border-blue-200 dark:border-cyan-900">
+                <div class="bg-surface-100 dark:bg-surface-800 rounded-2xl p-8 card-hover border border-gray-200 dark:border-purple-900/30">
                     <div class="flex items-start justify-between mb-4">
                         <div class="flex items-center gap-3">
-                            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-400 to-cyan-500 flex items-center justify-center">
-                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                            </div>
+                            <svg class="w-7 h-7 text-purple-500 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                             <div>
                                 <h4 class="font-bold text-xl">LocoOperator</h4>
                                 <p class="text-xs text-gray-600 dark:text-gray-400">Agentic Framework</p>
@@ -308,9 +304,9 @@
                         A specialized framework for training and deploying local agentic AI models. Powers the agent loop with tool calling, planning, and execution capabilities.
                     </p>
                     <div class="flex flex-wrap gap-2 mb-4">
-                        <span class="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 text-xs rounded-md">Agent Framework</span>
-                        <span class="px-2 py-1 bg-cyan-100 dark:bg-cyan-900/30 text-cyan-800 dark:text-cyan-300 text-xs rounded-md">Tool Execution</span>
-                        <span class="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 text-xs rounded-md">Local First</span>
+                        <span class="px-2 py-1 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs rounded-md">Agent Framework</span>
+                        <span class="px-2 py-1 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs rounded-md">Tool Execution</span>
+                        <span class="px-2 py-1 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs rounded-md">Local First</span>
                     </div>
                     <div class="flex gap-3">
                         <a href="blog/index.html" class="flex items-center gap-1 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition">
@@ -326,11 +322,9 @@
         <div>
             <h3 class="font-serif text-2xl font-bold mb-6">Use Cases</h3>
             <div class="grid md:grid-cols-2 gap-6">
-                <div class="bg-stone-100 dark:bg-gray-800 rounded-2xl p-8 card-hover">
+                <div class="bg-surface-100 dark:bg-surface-800 rounded-2xl p-8 card-hover">
                     <div class="flex items-center justify-between mb-4">
-                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center">
-                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
-                        </div>
+                        <svg class="w-6 h-6 text-purple-500 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
                         <span class="px-3 py-1 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs font-semibold rounded-full">Primary Driver</span>
                     </div>
                     <h3 class="font-semibold text-lg mb-3">Claude Code</h3>
@@ -339,30 +333,24 @@
                     <li class="flex items-start"><span class="mr-2">→</span>LocoreModel handles tool use, file edits, and shell execution natively</li>
                 </ul>
             </div>
-            <div class="bg-stone-100 dark:bg-gray-800 rounded-2xl p-8 card-hover">
-                <div class="w-10 h-10 mb-4 rounded-full bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center">
-                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                </div>
+            <div class="bg-surface-100 dark:bg-surface-800 rounded-2xl p-8 card-hover">
+                <svg class="w-6 h-6 mb-4 text-purple-500 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                 <h3 class="font-semibold text-lg mb-3">OpenClaw</h3>
                 <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
                     <li class="flex items-start"><span class="mr-2">→</span>Run a fully general-purpose local agent — browse, execute commands, manage files — powered by LocoreModel</li>
                     <li class="flex items-start"><span class="mr-2">→</span>No cloud, no subscription, no limits on what your agent can do</li>
                 </ul>
             </div>
-            <div class="bg-stone-100 dark:bg-gray-800 rounded-2xl p-8 card-hover">
-                <div class="w-10 h-10 mb-4 rounded-full bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center">
-                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                </div>
+            <div class="bg-surface-100 dark:bg-surface-800 rounded-2xl p-8 card-hover">
+                <svg class="w-6 h-6 mb-4 text-purple-500 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 <h3 class="font-semibold text-lg mb-3">Any OpenAI-Compatible Agent</h3>
                 <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
                     <li class="flex items-start"><span class="mr-2">→</span>LocoreModel exposes an OpenAI-compatible API — swap the endpoint, keep your existing agent setup</li>
                     <li class="flex items-start"><span class="mr-2">→</span>Works with any agentic tool that supports custom model endpoints</li>
                 </ul>
             </div>
-            <div class="bg-stone-100 dark:bg-gray-800 rounded-2xl p-8 card-hover">
-                <div class="w-10 h-10 mb-4 rounded-full bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center">
-                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
-                </div>
+            <div class="bg-surface-100 dark:bg-surface-800 rounded-2xl p-8 card-hover">
+                <svg class="w-6 h-6 mb-4 text-purple-500 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
                 <h3 class="font-semibold text-lg mb-3">Air-Gapped & Enterprise</h3>
                 <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
                     <li class="flex items-start"><span class="mr-2">→</span>Deploy agentic AI in regulated or offline environments where cloud APIs are not an option</li>
@@ -380,40 +368,27 @@
             <p class="text-gray-600 dark:text-gray-400">Plug LocoreModel into the agentic AI tools you already use</p>
         </div>
         <div class="grid md:grid-cols-3 gap-6">
-            <div class="bg-gradient-to-br from-orange-400 to-yellow-300 rounded-2xl p-8 card-hover">
-                <div class="bg-white dark:bg-gray-900 rounded-xl p-6 mb-4">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-lg flex items-center justify-center">
-                            <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
-                        </div>
-                        <span class="text-2xl font-bold">Claude Code</span>
-                    </div>
+            <div class="bg-surface-100 dark:bg-surface-800 border border-gray-200 dark:border-purple-900/30 rounded-2xl p-8 card-hover">
+                <div class="flex items-center space-x-3 mb-4">
+                    <svg class="w-8 h-8 text-purple-500 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+                    <span class="text-2xl font-bold">Claude Code</span>
                 </div>
-                <div class="text-xs text-gray-700 mb-2">Agentic AI Framework</div>
+                <div class="text-xs text-gray-500 dark:text-gray-400 mb-2">Agentic AI Framework</div>
                 <h3 class="font-semibold mb-2">Claude Code</h3>
-                <p class="text-sm text-gray-700 mb-3">Anthropic's powerful terminal-based agentic AI. Reads your codebase, plans and executes multi-step tasks, runs shell commands. Point it at LocoreModel via Ollama — same experience, fully local.</p>
+                <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Anthropic's powerful terminal-based agentic AI. Reads your codebase, plans and executes multi-step tasks, runs shell commands. Point it at LocoreModel via Ollama — same experience, fully local.</p>
                 <a href="#" class="text-sm font-medium hover:underline">Claude Code →</a>
             </div>
-            <div class="bg-gradient-to-br from-purple-400 to-pink-300 rounded-2xl p-8 card-hover">
-                <div class="bg-white/90 dark:bg-gray-900/90 rounded-xl p-6 mb-4">
-                    <div class="flex items-center space-x-3">
-                        <span class="text-4xl font-bold text-gradient">OpenClaw</span>
-                    </div>
-                </div>
-                <div class="text-xs text-gray-700 mb-2">Agentic AI Framework</div>
-                <h3 class="font-semibold mb-2">OpenClaw</h3>
-                <p class="text-sm text-gray-700 mb-3">General-purpose local AI agent — browses the web, executes commands, manages files, controls your desktop. Pair it with LocoreModel for a fully self-hosted, zero-cost agentic AI setup.</p>
+            <div class="bg-surface-100 dark:bg-surface-800 border border-gray-200 dark:border-purple-900/30 rounded-2xl p-8 card-hover">
+                <div class="text-xs text-gray-500 dark:text-gray-400 mb-2">Agentic AI Framework</div>
+                <h3 class="font-semibold text-xl mb-2">OpenClaw</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">General-purpose local AI agent — browses the web, executes commands, manages files, controls your desktop. Pair it with LocoreModel for a fully self-hosted, zero-cost agentic AI setup.</p>
                 <a href="#" class="text-sm font-medium hover:underline">OpenClaw →</a>
             </div>
-            <div class="bg-gradient-to-br from-blue-600 to-cyan-500 rounded-2xl p-8 card-hover">
-                <div class="bg-white dark:bg-gray-900 rounded-xl p-6 mb-4">
-                    <div class="w-16 h-16 bg-gradient-to-br from-green-400 to-blue-500 rounded-lg flex items-center justify-center">
-                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
-                    </div>
-                </div>
-                <div class="text-xs text-gray-700 mb-2">Agentic AI Framework</div>
+            <div class="bg-surface-100 dark:bg-surface-800 border border-gray-200 dark:border-purple-900/30 rounded-2xl p-8 card-hover">
+                <svg class="w-8 h-8 mb-4 text-purple-500 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+                <div class="text-xs text-gray-500 dark:text-gray-400 mb-2">Agentic AI Framework</div>
                 <h3 class="font-semibold mb-2">OpenCode & More</h3>
-                <p class="text-sm text-gray-700 mb-3">Any agentic AI tool with an OpenAI-compatible endpoint works with LocoreModel. OpenCode, Cline, and the growing ecosystem of open-source agentic AI — all running locally on your hardware.</p>
+                <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Any agentic AI tool with an OpenAI-compatible endpoint works with LocoreModel. OpenCode, Cline, and the growing ecosystem of open-source agentic AI — all running locally on your hardware.</p>
                 <a href="https://github.com/LocoreMind" target="_blank" class="text-sm font-medium hover:underline">GitHub ↗</a>
             </div>
         </div>
@@ -425,77 +400,27 @@
             <h2 class="font-serif text-3xl md:text-4xl font-bold mb-2">Our Team</h2>
             <p class="text-gray-600 dark:text-gray-400">AI researchers, systems engineers, and open-source contributors</p>
         </div>
-        <div class="grid lg:grid-cols-2 gap-12 items-center">
-            <div class="bg-gray-800 dark:bg-gray-900 rounded-3xl p-8">
-                <div class="bg-gray-100 dark:bg-gray-800 rounded-2xl p-6">
-                    <div class="text-xs text-gray-500 mb-4 text-center">COMPLETE PIPELINE COVERAGE</div>
-                    <div class="flex items-center justify-between space-x-2">
-                        <div class="flex flex-col items-center space-y-2">
-                            <div class="w-10 h-10 rounded-full bg-cyan-500 flex items-center justify-center">
-                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path></svg>
-                            </div>
-                            <span class="text-xs font-semibold">DATA</span>
-                        </div>
-                        <span class="text-gray-500">→</span>
-                        <div class="flex flex-col items-center space-y-2">
-                            <div class="w-10 h-10 rounded-full bg-cyan-500 flex items-center justify-center">
-                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"></path></svg>
-                            </div>
-                            <span class="text-xs font-semibold">INFRA</span>
-                        </div>
-                        <span class="text-gray-500">→</span>
-                        <div class="flex flex-col items-center space-y-2">
-                            <div class="w-10 h-10 rounded-full bg-cyan-500 flex items-center justify-center">
-                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
-                            </div>
-                            <span class="text-xs font-semibold">PRE-TRAIN</span>
-                        </div>
-                        <span class="text-gray-500">→</span>
-                        <div class="flex flex-col items-center space-y-2">
-                            <div class="w-10 h-10 rounded-full bg-cyan-500 flex items-center justify-center">
-                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
-                            </div>
-                            <span class="text-xs font-semibold">MID-TRAIN</span>
-                        </div>
-                        <span class="text-gray-500">→</span>
-                        <div class="flex flex-col items-center space-y-2">
-                            <div class="w-10 h-10 rounded-full bg-cyan-500 flex items-center justify-center">
-                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            </div>
-                            <span class="text-xs font-semibold">POST-TRAIN</span>
-                        </div>
-                        <span class="text-gray-500">→</span>
-                        <div class="flex flex-col items-center space-y-2">
-                            <div class="w-10 h-10 rounded-full bg-cyan-500 flex items-center justify-center">
-                                <span class="text-white font-bold text-sm">L</span>
-                            </div>
-                            <span class="text-xs font-semibold">AGENT</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="space-y-4">
-                <div class="bg-stone-100 dark:bg-gray-800 rounded-2xl p-8 text-center">
+        <div class="grid md:grid-cols-3 gap-6">
+                <div class="bg-surface-100 dark:bg-surface-800 rounded-2xl p-8 text-center">
                     <div class="text-4xl font-serif font-bold mb-2">80+</div>
                     <div class="font-semibold mb-1">Team Members</div>
                     <div class="text-sm text-gray-600 dark:text-gray-400">Covering full AI pipeline</div>
                 </div>
-                <div class="bg-stone-100 dark:bg-gray-800 rounded-2xl p-8 text-center">
+                <div class="bg-surface-100 dark:bg-surface-800 rounded-2xl p-8 text-center">
                     <div class="text-4xl font-serif font-bold mb-2">70%+</div>
                     <div class="font-semibold mb-1">PhD Holders</div>
                     <div class="text-sm text-gray-600 dark:text-gray-400">From top global institutions</div>
                 </div>
-                <div class="bg-stone-100 dark:bg-gray-800 rounded-2xl p-8 text-center">
+                <div class="bg-surface-100 dark:bg-surface-800 rounded-2xl p-8 text-center">
                     <div class="text-4xl font-serif font-bold mb-2">100%</div>
                     <div class="font-semibold mb-1">Top-Tier Tech</div>
                     <div class="text-sm text-gray-600 dark:text-gray-400">Alibaba, Huawei, Tencent, etc.</div>
                 </div>
-            </div>
         </div>
     </section>
 
     <!-- Blog -->
-    <section id="blog" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto bg-stone-100 dark:bg-gray-800">
+    <section id="blog" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto bg-surface-100 dark:bg-surface-800">
         <div class="mb-12 text-center">
             <h2 class="font-serif text-3xl md:text-4xl font-bold mb-4">Blog</h2>
             <p class="text-gray-600 dark:text-gray-400">Insights on local agentic AI, model training, and open-source development</p>
@@ -503,10 +428,10 @@
 
         <div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
             <!-- LocoTrainer Blog Card -->
-            <div class="bg-white dark:bg-gray-900 rounded-2xl overflow-hidden card-hover border border-gray-200 dark:border-gray-700">
+            <div class="bg-white dark:bg-surface-900 rounded-2xl overflow-hidden card-hover border border-gray-200 dark:border-purple-900/30">
                 <div class="p-8">
                     <div class="flex items-center gap-2 mb-4">
-                        <span class="px-3 py-1 bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 text-xs font-semibold rounded-full">New</span>
+                        <span class="px-3 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 text-xs font-semibold rounded-full">New</span>
                         <span class="text-xs text-gray-500 dark:text-gray-400">March 13, 2026</span>
                     </div>
                     <h3 class="font-serif text-2xl font-bold mb-3 text-gray-900 dark:text-white">LocoTrainer: MS-SWIFT Domain Expert Agent</h3>
@@ -518,7 +443,7 @@
                         <span class="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-xs rounded-md">Tool Calling</span>
                         <span class="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-xs rounded-md">MS-SWIFT</span>
                     </div>
-                    <a href="blog/locotrainer.html" class="inline-flex items-center gap-2 text-sm font-medium text-primary hover:text-secondary transition">
+                    <a href="blog/locotrainer.html" class="inline-flex items-center gap-2 text-sm font-medium text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-300 transition">
                         Read More
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                     </a>
@@ -526,10 +451,10 @@
             </div>
 
             <!-- LocoOperator Blog Card -->
-            <div class="bg-white dark:bg-gray-900 rounded-2xl overflow-hidden card-hover border border-gray-200 dark:border-gray-700">
+            <div class="bg-white dark:bg-surface-900 rounded-2xl overflow-hidden card-hover border border-gray-200 dark:border-purple-900/30">
                 <div class="p-8">
                     <div class="flex items-center gap-2 mb-4">
-                        <span class="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 text-xs font-semibold rounded-full">Release</span>
+                        <span class="px-3 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 text-xs font-semibold rounded-full">Release</span>
                         <span class="text-xs text-gray-500 dark:text-gray-400">February 22, 2026</span>
                     </div>
                     <h3 class="font-serif text-2xl font-bold mb-3 text-gray-900 dark:text-white">LocoOperator-4B: Agentic Framework</h3>
@@ -541,7 +466,7 @@
                         <span class="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-xs rounded-md">Local First</span>
                         <span class="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-xs rounded-md">Tool Execution</span>
                     </div>
-                    <a href="blog/loco-operator.html" class="inline-flex items-center gap-2 text-sm font-medium text-primary hover:text-secondary transition">
+                    <a href="blog/loco-operator.html" class="inline-flex items-center gap-2 text-sm font-medium text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-300 transition">
                         Read More
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                     </a>
@@ -552,12 +477,17 @@
 
     <!-- CTA Section -->
     <section class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto mb-20">
-        <div class="bg-stone-100 dark:bg-gray-800 rounded-3xl p-12 md:p-20 text-center">
+        <div class="bg-surface-100 dark:bg-surface-800 rounded-3xl p-12 md:p-20 text-center">
             <h2 class="font-serif text-3xl md:text-4xl font-bold mb-4">Your Agents. Your Machine.</h2>
             <p class="text-gray-600 dark:text-gray-400 mb-8">Stop paying to run Claude Code. Run LocoreModel locally and keep everything — your data, your costs, your control.</p>
-            <button class="px-8 py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium rounded-full hover:bg-gray-800 dark:hover:bg-gray-100 transition shadow-lg">
-                Start Exploring
-            </button>
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a href="https://app.locoremind.com" target="_blank" class="px-8 py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium rounded-full hover:bg-gray-800 dark:hover:bg-gray-100 transition shadow-lg">
+                    Try Free AI Tools
+                </a>
+                <a href="https://github.com/LocoreMind" target="_blank" class="px-8 py-3 border-2 border-gray-900 dark:border-white text-gray-900 dark:text-white font-medium rounded-full hover:bg-gray-900 hover:text-white dark:hover:bg-white dark:hover:text-gray-900 transition">
+                    View GitHub
+                </a>
+            </div>
         </div>
     </section>
 
