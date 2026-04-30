@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Privacy Policy - LocoreMind</title>
-    <meta name="description" content="Privacy Policy for LocoreMind - Local AI Agent Platform">
+    <meta name="description" content="Privacy Policy for LocoreMind - Agentic AI Models & Cloud API">
 
     <link rel="icon" type="image/png" href="/assets/locoremind-logo.png">
     <link rel="apple-touch-icon" href="/assets/locoremind-logo.png">
@@ -59,31 +59,62 @@
     <!-- Main Content -->
     <main class="pt-32 pb-20 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
         <h1 class="font-serif text-4xl md:text-5xl font-bold mb-6">Privacy Policy</h1>
-        <p class="text-gray-600 dark:text-gray-400 mb-12">Last updated: March 24, 2026</p>
+        <p class="text-gray-600 dark:text-gray-400 mb-12">Last updated: April 30, 2026</p>
 
         <div class="prose prose-lg dark:prose-invert max-w-none space-y-8">
             <section>
                 <h2 class="font-serif text-2xl font-bold mb-4">1. Introduction</h2>
                 <p class="text-gray-700 dark:text-gray-300 mb-4">
-                    LocoreMind ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we handle information in connection with our local AI models and services.
+                    LocoreMind ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and protect information in connection with our Cloud API service, website, and self-hosted models.
+                </p>
+                <p class="text-gray-700 dark:text-gray-300 mb-4">
+                    LocoreMind is operated by a company registered at Unit A, 82 James Carter Road, Mildenhall, Suffolk, IP28 7DE, United Kingdom.
                 </p>
             </section>
 
             <section>
-                <h2 class="font-serif text-2xl font-bold mb-4">2. Local-First Philosophy</h2>
+                <h2 class="font-serif text-2xl font-bold mb-4">2. Information We Collect</h2>
                 <p class="text-gray-700 dark:text-gray-300 mb-4">
-                    Our models are designed to run entirely on your local hardware. This means:
+                    We collect different types of information depending on how you use our services:
+                </p>
+                <h3 class="font-semibold text-lg mb-2 text-gray-800 dark:text-gray-200">2.1 Account Information</h3>
+                <p class="text-gray-700 dark:text-gray-300 mb-4">
+                    When you create an account to use our Cloud API, we collect:
                 </p>
                 <ul class="list-disc pl-6 text-gray-700 dark:text-gray-300 space-y-2">
-                    <li>Your data never leaves your machine when using our models locally</li>
-                    <li>We do not collect, store, or process your prompts or model outputs</li>
-                    <li>You maintain complete control over your data and privacy</li>
-                    <li>No API calls are made to our servers during model inference</li>
+                    <li>Email address</li>
+                    <li>Name (if provided)</li>
+                    <li>Organization name (if applicable)</li>
+                    <li>API keys generated for your account</li>
                 </ul>
-            </section>
 
-            <section>
-                <h2 class="font-serif text-2xl font-bold mb-4">3. Website Analytics</h2>
+                <h3 class="font-semibold text-lg mb-2 mt-4 text-gray-800 dark:text-gray-200">2.2 Payment Information</h3>
+                <p class="text-gray-700 dark:text-gray-300 mb-4">
+                    When you subscribe to a paid plan, payment processing is handled by <strong>Stripe, Inc.</strong> We do not store your full credit card number, CVV, or other sensitive payment details on our servers. Stripe collects and processes:
+                </p>
+                <ul class="list-disc pl-6 text-gray-700 dark:text-gray-300 space-y-2">
+                    <li>Credit/debit card details</li>
+                    <li>Billing address</li>
+                    <li>Transaction history</li>
+                </ul>
+                <p class="text-gray-700 dark:text-gray-300 mt-2">
+                    Please refer to <a href="https://stripe.com/privacy" class="text-purple-600 dark:text-purple-400 hover:underline" target="_blank">Stripe's Privacy Policy</a> for details on how they handle your payment data.
+                </p>
+
+                <h3 class="font-semibold text-lg mb-2 mt-4 text-gray-800 dark:text-gray-200">2.3 Cloud API Usage Data</h3>
+                <p class="text-gray-700 dark:text-gray-300 mb-4">
+                    When you use our Cloud API, we collect:
+                </p>
+                <ul class="list-disc pl-6 text-gray-700 dark:text-gray-300 space-y-2">
+                    <li>Token usage counts (for billing purposes)</li>
+                    <li>API request metadata (timestamps, model selected, response status)</li>
+                    <li>IP addresses for rate limiting and security</li>
+                </ul>
+                <p class="text-gray-700 dark:text-gray-300 mt-2">
+                    <strong>Important:</strong> We do not log, store, or use your API request content (prompts and completions) for training purposes. Request content is processed in memory and discarded after the response is returned.
+                </p>
+
+                <h3 class="font-semibold text-lg mb-2 mt-4 text-gray-800 dark:text-gray-200">2.4 Website Analytics</h3>
                 <p class="text-gray-700 dark:text-gray-300 mb-4">
                     Our website (locoremind.com) may collect basic analytics information including:
                 </p>
@@ -93,30 +124,69 @@
                     <li>Referring websites</li>
                     <li>General geographic location (country/region level)</li>
                 </ul>
-                <p class="text-gray-700 dark:text-gray-300 mt-4">
-                    This information is used solely to improve our website and understand how users interact with our content.
-                </p>
             </section>
 
             <section>
-                <h2 class="font-serif text-2xl font-bold mb-4">4. GitHub and Third-Party Services</h2>
+                <h2 class="font-serif text-2xl font-bold mb-4">3. Self-Hosted Models</h2>
                 <p class="text-gray-700 dark:text-gray-300 mb-4">
-                    Our code repositories are hosted on GitHub and models on HuggingFace. When you interact with these platforms:
+                    When you self-host our open-source models on your own hardware:
                 </p>
                 <ul class="list-disc pl-6 text-gray-700 dark:text-gray-300 space-y-2">
-                    <li>GitHub's privacy policy applies to repository interactions</li>
-                    <li>HuggingFace's privacy policy applies to model downloads</li>
-                    <li>We do not control or have access to data collected by these platforms</li>
+                    <li>Your data never leaves your machine</li>
+                    <li>We do not collect, store, or process your prompts or model outputs</li>
+                    <li>No API calls are made to our servers during local model inference</li>
+                    <li>You maintain complete control over your data and privacy</li>
                 </ul>
             </section>
 
             <section>
-                <h2 class="font-serif text-2xl font-bold mb-4">5. Cookies</h2>
+                <h2 class="font-serif text-2xl font-bold mb-4">4. How We Use Your Information</h2>
+                <p class="text-gray-700 dark:text-gray-300 mb-4">
+                    We use collected information for the following purposes:
+                </p>
+                <ul class="list-disc pl-6 text-gray-700 dark:text-gray-300 space-y-2">
+                    <li>Providing and maintaining the Cloud API service</li>
+                    <li>Processing payments and managing subscriptions</li>
+                    <li>Enforcing usage limits and preventing abuse</li>
+                    <li>Sending service-related communications (billing alerts, downtime notices)</li>
+                    <li>Improving our services and developing new features</li>
+                    <li>Complying with legal obligations</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2 class="font-serif text-2xl font-bold mb-4">5. Third-Party Services</h2>
+                <p class="text-gray-700 dark:text-gray-300 mb-4">
+                    We use the following third-party services that may process your data:
+                </p>
+                <ul class="list-disc pl-6 text-gray-700 dark:text-gray-300 space-y-2">
+                    <li><strong>Stripe</strong> — Payment processing (<a href="https://stripe.com/privacy" class="text-purple-600 dark:text-purple-400 hover:underline" target="_blank">Privacy Policy</a>)</li>
+                    <li><strong>GitHub</strong> — Code repository hosting (<a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" class="text-purple-600 dark:text-purple-400 hover:underline" target="_blank">Privacy Policy</a>)</li>
+                    <li><strong>HuggingFace</strong> — Model hosting (<a href="https://huggingface.co/privacy" class="text-purple-600 dark:text-purple-400 hover:underline" target="_blank">Privacy Policy</a>)</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2 class="font-serif text-2xl font-bold mb-4">6. Data Retention</h2>
+                <p class="text-gray-700 dark:text-gray-300 mb-4">
+                    We retain your information as follows:
+                </p>
+                <ul class="list-disc pl-6 text-gray-700 dark:text-gray-300 space-y-2">
+                    <li><strong>Account data:</strong> Retained while your account is active and for 30 days after deletion request</li>
+                    <li><strong>Usage logs:</strong> Retained for up to 90 days for billing and security purposes</li>
+                    <li><strong>Payment records:</strong> Retained as required by tax and financial regulations (typically 7 years)</li>
+                    <li><strong>API request content:</strong> Not retained — processed in memory only</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2 class="font-serif text-2xl font-bold mb-4">7. Cookies</h2>
                 <p class="text-gray-700 dark:text-gray-300 mb-4">
                     Our website uses minimal cookies for:
                 </p>
                 <ul class="list-disc pl-6 text-gray-700 dark:text-gray-300 space-y-2">
-                    <li>Remembering your dark mode preference</li>
+                    <li>Remembering your dark mode preference (localStorage)</li>
+                    <li>Session management when logged into the API dashboard</li>
                     <li>Basic analytics (if enabled)</li>
                 </ul>
                 <p class="text-gray-700 dark:text-gray-300 mt-4">
@@ -125,51 +195,65 @@
             </section>
 
             <section>
-                <h2 class="font-serif text-2xl font-bold mb-4">6. Data Security</h2>
+                <h2 class="font-serif text-2xl font-bold mb-4">8. Data Security</h2>
                 <p class="text-gray-700 dark:text-gray-300 mb-4">
-                    Since our models run locally on your hardware, you are responsible for:
+                    We implement appropriate technical and organizational measures to protect your data, including:
                 </p>
                 <ul class="list-disc pl-6 text-gray-700 dark:text-gray-300 space-y-2">
-                    <li>Securing your local environment</li>
-                    <li>Protecting any sensitive data you process with our models</li>
-                    <li>Implementing appropriate access controls</li>
-                    <li>Backing up your data as needed</li>
+                    <li>Encryption in transit (TLS/HTTPS) for all API communications</li>
+                    <li>Encryption at rest for stored account data</li>
+                    <li>API key hashing — we store only hashed versions of your API keys</li>
+                    <li>Regular security reviews and updates</li>
                 </ul>
             </section>
 
             <section>
-                <h2 class="font-serif text-2xl font-bold mb-4">7. Children's Privacy</h2>
+                <h2 class="font-serif text-2xl font-bold mb-4">9. Your Rights</h2>
                 <p class="text-gray-700 dark:text-gray-300 mb-4">
-                    Our services are not directed to children under 13. We do not knowingly collect personal information from children under 13. If you believe we have inadvertently collected such information, please contact us.
+                    Depending on your jurisdiction, you may have the right to:
+                </p>
+                <ul class="list-disc pl-6 text-gray-700 dark:text-gray-300 space-y-2">
+                    <li>Access the personal data we hold about you</li>
+                    <li>Request correction of inaccurate data</li>
+                    <li>Request deletion of your data</li>
+                    <li>Export your data in a portable format</li>
+                    <li>Object to or restrict processing of your data</li>
+                </ul>
+                <p class="text-gray-700 dark:text-gray-300 mt-2">
+                    To exercise these rights, please contact us at <a href="mailto:support@locoremind.com" class="text-purple-600 dark:text-purple-400 hover:underline">support@locoremind.com</a>.
                 </p>
             </section>
 
             <section>
-                <h2 class="font-serif text-2xl font-bold mb-4">8. International Users</h2>
+                <h2 class="font-serif text-2xl font-bold mb-4">10. Children's Privacy</h2>
                 <p class="text-gray-700 dark:text-gray-300 mb-4">
-                    Our models can be used anywhere in the world. Since they run locally, data processing occurs entirely within your jurisdiction, subject to your local laws and regulations.
+                    Our services are not directed to children under 13 (or 16 in the EEA/UK). We do not knowingly collect personal information from children. If you believe we have inadvertently collected such information, please contact us immediately.
                 </p>
             </section>
 
             <section>
-                <h2 class="font-serif text-2xl font-bold mb-4">9. Changes to This Policy</h2>
+                <h2 class="font-serif text-2xl font-bold mb-4">11. International Data Transfers</h2>
                 <p class="text-gray-700 dark:text-gray-300 mb-4">
-                    We may update this Privacy Policy from time to time. Changes will be posted on this page with an updated "Last updated" date. We encourage you to review this policy periodically.
+                    Our Cloud API infrastructure may process data in multiple regions. For self-hosted models, data processing occurs entirely within your own infrastructure and jurisdiction. By using our Cloud API, you consent to the transfer of data to our processing locations.
                 </p>
             </section>
 
             <section>
-                <h2 class="font-serif text-2xl font-bold mb-4">10. Contact Us</h2>
+                <h2 class="font-serif text-2xl font-bold mb-4">12. Changes to This Policy</h2>
                 <p class="text-gray-700 dark:text-gray-300 mb-4">
-                    If you have questions about this Privacy Policy, please contact us through our GitHub repository at <a href="https://github.com/LocoreMind" class="text-primary hover:text-secondary underline">github.com/LocoreMind</a>.
+                    We may update this Privacy Policy from time to time. Changes will be posted on this page with an updated "Last updated" date. For material changes affecting paid subscribers, we will provide notice via email at least 14 days in advance.
                 </p>
             </section>
 
-            <section class="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-lg">
-                <h3 class="font-serif text-xl font-bold mb-3">Privacy-First Commitment</h3>
-                <p class="text-gray-700 dark:text-gray-300">
-                    At LocoreMind, privacy isn't just a policy—it's our architecture. By running models locally on your hardware, we've eliminated the fundamental privacy risks associated with cloud-based AI services. Your code, your data, your machine. Always.
+            <section>
+                <h2 class="font-serif text-2xl font-bold mb-4">13. Contact Us</h2>
+                <p class="text-gray-700 dark:text-gray-300 mb-4">
+                    If you have questions about this Privacy Policy or wish to exercise your data rights, please contact us:
                 </p>
+                <ul class="list-none pl-0 text-gray-700 dark:text-gray-300 space-y-1">
+                    <li><strong>Email:</strong> <a href="mailto:support@locoremind.com" class="text-purple-600 dark:text-purple-400 hover:underline">support@locoremind.com</a></li>
+                    <li><strong>Address:</strong> Unit A, 82 James Carter Road, Mildenhall, Suffolk, IP28 7DE, United Kingdom</li>
+                </ul>
             </section>
         </div>
     </main>

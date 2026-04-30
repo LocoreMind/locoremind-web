@@ -59,25 +59,63 @@
     <!-- Main Content -->
     <main class="pt-32 pb-20 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
         <h1 class="font-serif text-4xl md:text-5xl font-bold mb-6">Terms of Service</h1>
-        <p class="text-gray-600 dark:text-gray-400 mb-12">Last updated: March 24, 2026</p>
+        <p class="text-gray-600 dark:text-gray-400 mb-12">Last updated: April 30, 2026</p>
 
         <div class="prose prose-lg dark:prose-invert max-w-none space-y-8">
             <section>
                 <h2 class="font-serif text-2xl font-bold mb-4">1. Acceptance of Terms</h2>
                 <p class="text-gray-700 dark:text-gray-300 mb-4">
-                    By accessing or using LocoreMind's models, software, and services (collectively, the "Services"), you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our Services.
+                    By accessing or using LocoreMind's models, software, Cloud API, and services (collectively, the "Services"), you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our Services.
                 </p>
             </section>
 
             <section>
-                <h2 class="font-serif text-2xl font-bold mb-4">2. Open Source License</h2>
+                <h2 class="font-serif text-2xl font-bold mb-4">2. Description of Services</h2>
                 <p class="text-gray-700 dark:text-gray-300 mb-4">
-                    LocoreMind models and software are released under open source licenses as specified in each repository. You are free to use, modify, and distribute our models in accordance with the applicable license terms. Please refer to individual repositories for specific license information.
+                    LocoreMind provides specialized AI agent models available through two delivery methods:
                 </p>
+                <ul class="list-disc pl-6 text-gray-700 dark:text-gray-300 space-y-2">
+                    <li><strong>Cloud API (Paid Service):</strong> A hosted, token-based API providing access to our specialized AI agents (Code Assistant, Data Analyst, Social Agent, and others) through an OpenAI-compatible REST endpoint.</li>
+                    <li><strong>Self-Hosted (Free, Open Source):</strong> Open-source model weights that you may download and run on your own hardware under the applicable open-source license.</li>
+                </ul>
             </section>
 
             <section>
-                <h2 class="font-serif text-2xl font-bold mb-4">3. Use of Services</h2>
+                <h2 class="font-serif text-2xl font-bold mb-4">3. Subscription Plans & Billing</h2>
+                <p class="text-gray-700 dark:text-gray-300 mb-4">
+                    Access to the Cloud API is offered through subscription plans:
+                </p>
+                <ul class="list-disc pl-6 text-gray-700 dark:text-gray-300 space-y-2">
+                    <li><strong>Free Plan:</strong> Limited daily token quota at no charge, subject to rate limits.</li>
+                    <li><strong>Pro Plan:</strong> Monthly subscription with increased token quota, billed monthly at the rate displayed on our pricing page.</li>
+                    <li><strong>Enterprise Plan:</strong> Monthly subscription with high-volume token quota and additional features, billed monthly at the rate displayed on our pricing page.</li>
+                </ul>
+                <p class="text-gray-700 dark:text-gray-300 mb-4 mt-4">
+                    Billing terms:
+                </p>
+                <ul class="list-disc pl-6 text-gray-700 dark:text-gray-300 space-y-2">
+                    <li>Paid subscriptions are billed monthly on the anniversary of your subscription start date.</li>
+                    <li>Payments are processed via Stripe. By subscribing, you authorize recurring charges to your payment method.</li>
+                    <li>Unused tokens do not roll over to the next billing cycle.</li>
+                    <li>Prices are listed in USD and are exclusive of applicable taxes.</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2 class="font-serif text-2xl font-bold mb-4">4. Cancellation & Refunds</h2>
+                <p class="text-gray-700 dark:text-gray-300 mb-4">
+                    You may cancel your subscription at any time through your account dashboard. Upon cancellation:
+                </p>
+                <ul class="list-disc pl-6 text-gray-700 dark:text-gray-300 space-y-2">
+                    <li>Your subscription remains active until the end of the current billing period.</li>
+                    <li>No prorated refunds are provided for partial billing periods.</li>
+                    <li>After the billing period ends, your account will revert to the Free plan.</li>
+                    <li>Refund requests for the current billing cycle may be submitted within 7 days of the charge date by contacting support. Refunds are granted at our discretion.</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2 class="font-serif text-2xl font-bold mb-4">5. Use of Services</h2>
                 <p class="text-gray-700 dark:text-gray-300 mb-4">
                     You may use our Services for lawful purposes only. You agree not to use the Services:
                 </p>
@@ -86,55 +124,63 @@
                     <li>To generate malicious code or content intended to harm others</li>
                     <li>To infringe upon intellectual property rights of others</li>
                     <li>To engage in unauthorized access to computer systems</li>
+                    <li>To resell, redistribute, or sublicense API access without written permission</li>
+                    <li>To exceed rate limits or circumvent usage restrictions</li>
                     <li>For any illegal or harmful activities</li>
                 </ul>
             </section>
 
             <section>
-                <h2 class="font-serif text-2xl font-bold mb-4">4. Local Deployment</h2>
+                <h2 class="font-serif text-2xl font-bold mb-4">6. API Usage & Rate Limits</h2>
                 <p class="text-gray-700 dark:text-gray-300 mb-4">
-                    Our models are designed to run locally on your hardware. You are responsible for:
+                    Cloud API usage is subject to the token quotas and rate limits of your subscription plan. We reserve the right to:
                 </p>
                 <ul class="list-disc pl-6 text-gray-700 dark:text-gray-300 space-y-2">
-                    <li>Ensuring your hardware meets the requirements for running the models</li>
-                    <li>Maintaining the security of your local deployment</li>
-                    <li>Complying with all applicable laws in your jurisdiction</li>
-                    <li>Any outputs generated by the models on your system</li>
+                    <li>Throttle or suspend access if usage exceeds plan limits</li>
+                    <li>Modify rate limits with reasonable notice</li>
+                    <li>Suspend accounts engaged in abusive usage patterns</li>
                 </ul>
             </section>
 
             <section>
-                <h2 class="font-serif text-2xl font-bold mb-4">5. No Warranty</h2>
+                <h2 class="font-serif text-2xl font-bold mb-4">7. Open Source License</h2>
+                <p class="text-gray-700 dark:text-gray-300 mb-4">
+                    LocoreMind model weights released for self-hosting are provided under open-source licenses as specified in each repository. You are free to use, modify, and distribute these models in accordance with the applicable license terms. The Cloud API service itself is a separate commercial offering and is not covered by open-source licenses.
+                </p>
+            </section>
+
+            <section>
+                <h2 class="font-serif text-2xl font-bold mb-4">8. No Warranty</h2>
                 <p class="text-gray-700 dark:text-gray-300 mb-4">
                     THE SERVICES ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED. WE DO NOT WARRANT THAT THE SERVICES WILL BE UNINTERRUPTED, ERROR-FREE, OR FREE OF HARMFUL COMPONENTS. YOU USE THE SERVICES AT YOUR OWN RISK.
                 </p>
             </section>
 
             <section>
-                <h2 class="font-serif text-2xl font-bold mb-4">6. Limitation of Liability</h2>
+                <h2 class="font-serif text-2xl font-bold mb-4">9. Limitation of Liability</h2>
                 <p class="text-gray-700 dark:text-gray-300 mb-4">
-                    TO THE MAXIMUM EXTENT PERMITTED BY LAW, LOCOREMIND SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, OR ANY LOSS OF PROFITS OR REVENUES, WHETHER INCURRED DIRECTLY OR INDIRECTLY, OR ANY LOSS OF DATA, USE, GOODWILL, OR OTHER INTANGIBLE LOSSES.
+                    TO THE MAXIMUM EXTENT PERMITTED BY LAW, LOCOREMIND SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, OR ANY LOSS OF PROFITS OR REVENUES, WHETHER INCURRED DIRECTLY OR INDIRECTLY, OR ANY LOSS OF DATA, USE, GOODWILL, OR OTHER INTANGIBLE LOSSES. OUR TOTAL LIABILITY SHALL NOT EXCEED THE AMOUNT PAID BY YOU IN THE TWELVE (12) MONTHS PRECEDING THE CLAIM.
                 </p>
             </section>
 
             <section>
-                <h2 class="font-serif text-2xl font-bold mb-4">7. Model Output</h2>
+                <h2 class="font-serif text-2xl font-bold mb-4">10. Model Output</h2>
                 <p class="text-gray-700 dark:text-gray-300 mb-4">
-                    AI models may generate inaccurate, biased, or inappropriate content. You are solely responsible for reviewing, validating, and using any outputs generated by our models. We do not endorse or take responsibility for model-generated content.
+                    AI models may generate inaccurate, biased, or inappropriate content. You are solely responsible for reviewing, validating, and using any outputs generated by our models, whether through the Cloud API or self-hosted deployment. We do not endorse or take responsibility for model-generated content.
                 </p>
             </section>
 
             <section>
-                <h2 class="font-serif text-2xl font-bold mb-4">8. Modifications to Terms</h2>
+                <h2 class="font-serif text-2xl font-bold mb-4">11. Modifications to Terms</h2>
                 <p class="text-gray-700 dark:text-gray-300 mb-4">
-                    We reserve the right to modify these Terms of Service at any time. Changes will be effective immediately upon posting to our website. Your continued use of the Services after changes are posted constitutes acceptance of the modified terms.
+                    We reserve the right to modify these Terms of Service at any time. Changes will be effective immediately upon posting to our website. We will notify subscribers via email of material changes to billing or subscription terms at least 14 days in advance. Your continued use of the Services after changes are posted constitutes acceptance of the modified terms.
                 </p>
             </section>
 
             <section>
-                <h2 class="font-serif text-2xl font-bold mb-4">9. Contact</h2>
+                <h2 class="font-serif text-2xl font-bold mb-4">12. Contact</h2>
                 <p class="text-gray-700 dark:text-gray-300 mb-4">
-                    For questions about these Terms of Service, please contact us through our GitHub repository at <a href="https://github.com/LocoreMind" class="text-primary hover:text-secondary underline">github.com/LocoreMind</a>.
+                    For questions about these Terms of Service, billing inquiries, or refund requests, please contact us at <a href="mailto:support@locoremind.com" class="text-purple-600 dark:text-purple-400 hover:underline">support@locoremind.com</a> or through our GitHub repository at <a href="https://github.com/LocoreMind" class="text-purple-600 dark:text-purple-400 hover:underline">github.com/LocoreMind</a>.
                 </p>
             </section>
         </div>
