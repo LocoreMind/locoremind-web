@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LocoAgent: AI-Powered Social Media Agent with Real Browser Automation | LocoreMind Blog</title>
+<meta name="description" content="Introducing LocoAgent, an open-source AI agent that autonomously operates social media accounts through real Chrome browser automation. Platform skills, workflow engine, and multi-provider LLM support.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='50' cy='50' r='50' fill='%23000000'/%3E%3Cpath d='M35 30V70H65' stroke='%23FFFFFF' stroke-width='12' fill='none' stroke-linecap='square'/%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0c0a14;--bg2:#120f1e;--bg3:#1a1528;
+  --text:#f0edf7;--text-dim:#a89ec0;--text-muted:#6b5f85;
+  --gold:#fbbf24;--amber:#f59e0b;--violet:#a78bfa;--purple:#7c3aed;
+  --rose:#f472b6;--fuchsia:#d946ef;
+  --grad1:linear-gradient(135deg,#fbbf24,#f59e0b,#f472b6,#a78bfa,#7c3aed);
+  --grad-hero:linear-gradient(135deg,#fbbf24,#f59e0b,#38bdf8,#3b82f6,#a78bfa,#7c3aed);
+  --grad2:linear-gradient(135deg,#fbbf24 0%,#a78bfa 100%);
+  --grad-soft:linear-gradient(135deg,rgba(251,191,36,0.12),rgba(167,139,250,0.12));
+  --border:rgba(167,139,250,0.15);
+  --orb1:rgba(251,191,36,0.08);--orb2:rgba(124,58,237,0.1);--orb3:rgba(244,114,182,0.06);
+  --card-hover-bg:rgba(167,139,250,0.03);
+  --font-display:'Sora',sans-serif;--font-mono:'DM Mono',monospace;
+}
+html.light{
+  --bg:#fffcf9;--bg2:#faf5f0;--bg3:#f3ecf8;
+  --text:#3b2e5a;--text-dim:#7b6e9a;--text-muted:#b0a6c8;
+  --gold:#d4a030;--amber:#c48d20;--violet:#b49aef;--purple:#9678e0;
+  --rose:#e8a0c8;
+  --grad1:linear-gradient(135deg,#f0d080,#f0c0d8,#d4b0f0,#b898e8);
+  --grad-hero:linear-gradient(135deg,#f0d080,#f0c0d8,#d4b0f0,#b898e8);
+  --grad2:linear-gradient(135deg,#f0d080 0%,#d4b0f0 100%);
+  --border:rgba(180,154,239,0.18);
+  --orb1:rgba(240,208,128,0.15);--orb2:rgba(180,152,232,0.12);--orb3:rgba(240,192,216,0.1);
+  --card-hover-bg:rgba(212,176,240,0.08);
+}
+html{scroll-behavior:smooth;background:var(--bg)}
+body{font-family:var(--font-display);color:var(--text);background:var(--bg);overflow-x:hidden;line-height:1.7}
+
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:rgba(167,139,250,0.3);border-radius:9px}
+
+/* ── Site nav ── */
+.site-nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 36px;display:flex;align-items:center;justify-content:space-between;
+  background:rgba(12,10,20,0.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+html.light .site-nav{background:rgba(255,252,249,0.85)}
+.site-nav-brand{font-family:var(--font-display);font-weight:700;font-size:18px;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:10px}
+.site-nav-brand svg{width:28px;height:28px}
+.site-nav-links{display:flex;align-items:center;gap:20px}
+.site-nav-links a{font-family:var(--font-mono);font-size:13px;color:var(--text-dim);text-decoration:none;transition:color 0.3s}
+.site-nav-links a:hover{color:var(--gold)}
+.site-nav-links .current{color:var(--gold)}
+
+/* ── Ambient orbs ── */
+.orb{position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:-1}
+.orb-1{width:600px;height:600px;background:var(--orb1);top:-200px;left:-100px;animation:drift1 20s ease-in-out infinite alternate}
+.orb-2{width:500px;height:500px;background:var(--orb2);bottom:-150px;right:-100px;animation:drift2 18s ease-in-out infinite alternate}
+.orb-3{width:400px;height:400px;background:var(--orb3);top:40%;left:50%;animation:drift3 22s ease-in-out infinite alternate}
+@keyframes drift1{0%{transform:translate(0,0)}100%{transform:translate(80px,60px)}}
+@keyframes drift2{0%{transform:translate(0,0)}100%{transform:translate(-60px,-80px)}}
+@keyframes drift3{0%{transform:translate(-50%,-50%)}100%{transform:translate(-40%,-40%)}}
+
+section{position:relative;padding:60px 0}
+.container{max-width:800px;margin:0 auto;padding:0 36px}
+
+.gt{background:var(--grad1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-gt{background:var(--grad-hero);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+/* ── Hero ── */
+.hero{padding-top:120px;padding-bottom:40px;text-align:center}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;padding:8px 20px;
+  background:rgba(251,191,36,0.12);border:1px solid rgba(251,191,36,0.3);
+  border-radius:100px;font-size:11px;color:var(--gold);letter-spacing:0.5px;
+  margin-bottom:24px;font-family:var(--font-mono);text-transform:uppercase}
+.hero h1{font-weight:800;font-size:clamp(2rem,5vw,3.5rem);line-height:1.15;
+  letter-spacing:-1.5px;margin-bottom:24px}
+.hero-meta{font-family:var(--font-mono);font-size:13px;color:var(--text-muted);margin-bottom:32px}
+.hero-desc{font-size:1.2rem;color:var(--text-dim);max-width:680px;
+  margin:0 auto 40px;font-weight:300;line-height:1.8}
+
+/* ── Article content ── */
+.article{max-width:720px;margin:0 auto;padding:40px 36px 80px}
+.article h2{font-weight:700;font-size:1.8rem;margin:48px 0 20px;line-height:1.3}
+.article h3{font-weight:600;font-size:1.4rem;margin:36px 0 16px;line-height:1.4}
+.article p{margin-bottom:20px;font-size:1.05rem;line-height:1.8;color:var(--text-dim)}
+.article ul,.article ol{margin:20px 0 20px 24px;color:var(--text-dim)}
+.article li{margin-bottom:12px;font-size:1.05rem;line-height:1.7}
+.article strong{color:var(--text);font-weight:600}
+.article code{font-family:var(--font-mono);font-size:0.9em;background:var(--bg2);
+  padding:3px 8px;border-radius:4px;color:var(--violet);border:1px solid var(--border)}
+.article pre{background:var(--bg2);border:1px solid var(--border);border-radius:12px;
+  padding:20px;margin:24px 0;overflow-x:auto;font-family:var(--font-mono);font-size:0.9rem;line-height:1.6}
+.article pre code{background:none;padding:0;border:none;color:var(--text)}
+.article blockquote{border-left:3px solid var(--violet);padding-left:24px;margin:32px 0;
+  font-style:italic;color:var(--text-dim);background:var(--card-hover-bg);padding:20px 20px 20px 24px;border-radius:8px}
+
+/* ── Spec table ── */
+.spec-table{background:var(--bg2);border:1px solid var(--border);border-radius:12px;
+  padding:24px;margin:32px 0;overflow-x:auto}
+.spec-table table{width:100%;border-collapse:collapse}
+.spec-table th{text-align:left;padding:12px;font-family:var(--font-mono);font-size:0.85rem;
+  color:var(--text-muted);border-bottom:1px solid var(--border);text-transform:uppercase;letter-spacing:0.5px}
+.spec-table td{padding:12px;border-bottom:1px solid rgba(167,139,250,0.08);color:var(--text-dim)}
+.spec-table td:first-child{font-weight:600;color:var(--text)}
+.spec-table tr:last-child td{border-bottom:none}
+
+/* ── Links ── */
+.link-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin:40px 0}
+.link-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;
+  padding:20px;text-decoration:none;transition:all 0.3s;display:flex;align-items:center;gap:12px}
+.link-card:hover{border-color:var(--violet);transform:translateY(-2px)}
+.link-card svg{width:20px;height:20px;color:var(--gold)}
+.link-card-text{font-weight:600;font-size:0.95rem;color:var(--text)}
+
+/* ── Tags ── */
+.tags{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:32px 0}
+.tag{font-family:var(--font-mono);font-size:11px;padding:6px 14px;border-radius:100px;
+  background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.15);color:var(--gold)}
+.tag.violet{background:rgba(167,139,250,0.08);border:1px solid rgba(167,139,250,0.15);color:var(--violet)}
+</style>
+</head>
+<body>
+
+<!-- Ambient orbs -->
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+
+<!-- Site nav -->
+<nav class="site-nav">
+  <a href="../index.html" class="site-nav-brand">
+    <svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='50' fill='currentColor'/><path d='M35 30V70H65' stroke='var(--bg)' stroke-width='12' fill='none' stroke-linecap='square'/></svg>
+    LocoreMind
+  </a>
+  <div class="site-nav-links">
+    <a href="../index.html">Home</a>
+    <a href="index.html" class="current">Blog</a>
+    <a href="https://github.com/LocoreMind/locoagent" target="_blank">GitHub ↗</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="container">
+    <span class="hero-eyebrow">Open Source</span>
+    <h1 class="hero-gt">LocoAgent: AI-Powered Social Media Agent</h1>
+    <div class="hero-meta">May 15, 2026 · 10 min read</div>
+    <p class="hero-desc">
+      An autonomous social media agent that operates real browser sessions — combining an LLM-driven agentic loop with platform skill playbooks and a deterministic workflow engine
+    </p>
+    <div class="tags">
+      <span class="tag">Browser Automation</span>
+      <span class="tag violet">Social Agent</span>
+      <span class="tag">Workflow Engine</span>
+      <span class="tag violet">Open Source</span>
+    </div>
+  </div>
+</section>
+
+<!-- Article -->
+<article class="article">
+
+  <h2>Introduction</h2>
+  <p>
+    Today we're open-sourcing <strong>LocoAgent</strong>, an AI-powered social media agent that autonomously operates social media accounts through real browser automation. Unlike API-based bots or headless browser scrapers, LocoAgent operates through a copy of your actual Chrome profile — same cookies, same login sessions, same browser fingerprint — making it indistinguishable from manual browsing.
+  </p>
+  <p>
+    LocoAgent combines an LLM-driven agentic loop with <a href="https://github.com/vercel-labs/agent-browser" target="_blank" style="color:var(--violet);text-decoration:underline">agent-browser</a> CLI to perceive, decide, and act on live web pages. It can like posts, write replies, follow users, publish content, and execute complex multi-step social media workflows — all autonomously.
+  </p>
+
+  <div class="link-grid">
+    <a href="https://github.com/LocoreMind/locoagent" target="_blank" class="link-card">
+      <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+      <span class="link-card-text">GitHub</span>
+    </a>
+    <a href="https://youtu.be/QesPS8xPaDA" target="_blank" class="link-card">
+      <svg fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+      <span class="link-card-text">Demo Video</span>
+    </a>
+  </div>
+
+  <h2>Why Real Browser Automation?</h2>
+  <p>
+    Social media platforms actively detect and block headless browsers, API-based automation, and unofficial clients. Traditional bot approaches face constant arms races with anti-automation systems. LocoAgent takes a fundamentally different approach:
+  </p>
+  <ul>
+    <li><strong>Real Chrome profile</strong> — Operates through a copy of your actual browser with your existing cookies and login sessions via Chrome DevTools Protocol (CDP)</li>
+    <li><strong>Same fingerprint</strong> — No detectable differences from your normal browsing since it's the same browser engine, extensions, and configuration</li>
+    <li><strong>No API hacks</strong> — No reverse-engineered private APIs that break with every platform update</li>
+    <li><strong>Visual perception</strong> — The agent sees the page the same way you do, using interactive element snapshots with reference IDs</li>
+  </ul>
+
+  <h2>Architecture Overview</h2>
+  <p>
+    LocoAgent's architecture consists of four core layers that work together to enable autonomous social media operation:
+  </p>
+
+  <pre><code>User Task / Scheduled Task
+    │
+    ▼
+Agentic Loop (LLM-driven)
+    ├── System Prompt + Platform Skills + Operation Log Summary
+    ├── Perceive: agent-browser snapshot → interactive elements
+    ├── Decide: LLM chooses next action
+    └── Act: agent-browser click / fill / navigate
+            │
+            ├── Workflow Engine (deterministic, no LLM)
+            │   └── Scripted browser pipelines
+            │
+            └── Operation Log (persistent dedup)
+                └── Prevents repeated likes, follows, replies</code></pre>
+
+  <p>
+    The <strong>agentic loop</strong> is the brain — it receives a task, perceives the current page state via <code>agent-browser snapshot</code>, decides what to do next using the LLM, and executes actions like clicking, typing, and navigating. The full <code>agent-browser</code> CLI reference is embedded in the system prompt, so the agent knows every command natively.
+  </p>
+
+  <h2>Platform Skill System</h2>
+  <p>
+    Skills are the key innovation that makes LocoAgent reliable. Instead of relying on the LLM to figure out how to operate each platform from scratch, skills inject <strong>complete operation playbooks</strong> into the agent's context. Each skill is a comprehensive manual covering every operation the agent might need.
+  </p>
+
+  <div class="spec-table">
+    <table>
+      <tr>
+        <th>Platform</th>
+        <th>Command</th>
+        <th>Operations</th>
+        <th>Capabilities</th>
+      </tr>
+      <tr>
+        <td>X.com</td>
+        <td><code>/x-com</code></td>
+        <td>32+</td>
+        <td>Browse, engage, post, social graph, profile, navigation, lists</td>
+      </tr>
+    </table>
+  </div>
+
+  <p>
+    With the X.com skill loaded, you can give the agent complex composite tasks and it will execute them in a single pass:
+  </p>
+
+  <pre><code># Interactive: load skill then give task
+&gt; /x-com open home timeline, like first 3 posts about AI, reply to the best one
+
+# Headless
+bun start -p "/x-com like 5 posts about 'large language models', then follow the authors"</code></pre>
+
+  <h3>Adding New Platforms</h3>
+  <p>
+    The skill system is designed for extensibility. Adding a new platform is as simple as creating a <code>SKILL.md</code> file with the operation playbook:
+  </p>
+
+  <pre><code>mkdir -p skills/linkedin
+
+# Create skills/linkedin/SKILL.md with the operations manual
+# The skill auto-discovers at startup and becomes available as /linkedin</code></pre>
+
+  <h2>Workflow Engine</h2>
+  <p>
+    Not everything needs LLM intelligence. The workflow engine runs <strong>deterministic browser-automation pipelines</strong> without any LLM involvement. The agent acts as a supervisor — it can inspect status, start/stop workflows — but the execution itself is pure scripted automation. This means predictable behavior, lower costs, and faster execution.
+  </p>
+
+  <div class="spec-table">
+    <table>
+      <tr>
+        <th>Workflow</th>
+        <th>Schedule</th>
+        <th>Description</th>
+      </tr>
+      <tr>
+        <td>HuggingFace Papers Fetcher</td>
+        <td>Daily</td>
+        <td>Fetch paper list, abstracts, and thumbnails from HuggingFace</td>
+      </tr>
+      <tr>
+        <td>HuggingFace → X.com</td>
+        <td>Daily</td>
+        <td>Full pipeline: fetch HF papers → download thumbnails → post as tweets</td>
+      </tr>
+      <tr>
+        <td>X.com Search & Reply</td>
+        <td>Daemon</td>
+        <td>Search X.com → read posts → generate AI reply → post reply</td>
+      </tr>
+      <tr>
+        <td>LinkedIn Search & Comment</td>
+        <td>Daemon</td>
+        <td>Search LinkedIn → read posts → generate AI comment → post comment</td>
+      </tr>
+    </table>
+  </div>
+
+  <pre><code># Run a workflow once
+bun run workflow run --id hf-papers-to-x
+
+# Run as a daemon (every 3 minutes)
+bun run workflow daemon --id x-search-reply --interval 3
+
+# Check status
+bun run workflow status</code></pre>
+
+  <p>
+    Custom workflows follow a simple contract: accept <code>--config &lt;json&gt;</code>, log to <code>stderr</code>, and output a JSON summary as the last line on <code>stdout</code>. See the <a href="https://github.com/LocoreMind/locoagent/blob/main/docs/workflow-development-guide.md" target="_blank" style="color:var(--violet);text-decoration:underline">workflow development guide</a> for details.
+  </p>
+
+  <h2>Operation Log & Deduplication</h2>
+  <p>
+    A recurring problem with autonomous agents is repeated actions — liking the same post twice, following someone you already follow, replying to the same thread again. LocoAgent solves this with a persistent operation log that spans across sessions.
+  </p>
+  <p>
+    Before every action, the agent checks the log. After every action, it records the result. This creates a reliable memory that prevents duplicate operations without needing a separate database.
+  </p>
+
+  <pre><code># Check before acting (exit 0 = already done, exit 1 = not done)
+bun run scripts/log-operation.ts check \
+  --platform x --action like --url "https://x.com/.../status/123"
+
+# Record after acting
+bun run scripts/log-operation.ts add \
+  --platform x --action like --url "https://x.com/.../status/123" \
+  --status success --note "AI agents research post"
+
+# 30-day summary (auto-injected into system prompt at startup)
+bun run scripts/log-operation.ts summary --days 30</code></pre>
+
+  <h2>Multi-Provider LLM Support</h2>
+  <p>
+    LocoAgent works with any OpenAI-compatible API through a built-in translation shim. The rest of the system is provider-agnostic — switch models without changing any agent code.
+  </p>
+
+  <div class="spec-table">
+    <table>
+      <tr>
+        <th>Provider</th>
+        <th>Base URL</th>
+        <th>Notes</th>
+      </tr>
+      <tr>
+        <td>OpenRouter</td>
+        <td><code>openrouter.ai/api/v1</code></td>
+        <td>Access 200+ models</td>
+      </tr>
+      <tr>
+        <td>DeepSeek</td>
+        <td><code>api.deepseek.com</code></td>
+        <td>Thinking mode fully supported</td>
+      </tr>
+      <tr>
+        <td>OpenAI</td>
+        <td><code>api.openai.com/v1</code></td>
+        <td>GPT-4o, o1, etc.</td>
+      </tr>
+      <tr>
+        <td>Ollama</td>
+        <td><code>localhost:11434/v1</code></td>
+        <td>Local models</td>
+      </tr>
+      <tr>
+        <td>Anthropic</td>
+        <td>(native SDK)</td>
+        <td>Set ANTHROPIC_API_KEY only</td>
+      </tr>
+    </table>
+  </div>
+
+  <h2>Task Scheduling</h2>
+  <p>
+    For consistent social media presence, LocoAgent supports structured task scheduling. Define daily and weekly tasks in a simple markdown file, set action limits per session, and let the agent execute them automatically.
+  </p>
+
+  <pre><code># persona/tasks.md
+## Daily Tasks
+1. Engage with relevant content (like posts matching topic queries)
+2. Monitor own project mentions
+3. Leave 1 technical comment on the most relevant post
+
+## Weekly Tasks (Monday)
+4. Follow 3-5 relevant researchers
+5. Post 1 original tweet about recent research findings
+
+## Session Constraints
+| Action   | Max per session |
+|----------|----------------|
+| Likes    | 10             |
+| Comments | 2              |
+| Follows  | 5              |
+| Posts    | 1              |</code></pre>
+
+  <pre><code># Execute today's tasks
+bun run run-tasks
+
+# Preview the prompt without running
+bun run run-tasks:dry</code></pre>
+
+  <h2>Realtime Trajectory Monitor</h2>
+  <p>
+    When the agent runs in headless mode, it's a black box. The trajectory monitor watches the session log and prints live execution status so you can see exactly what the agent is doing at every step.
+  </p>
+
+  <pre><code>═══ New Task ═══
+/x-com open timeline, like first post
+
+[6:30:47 PM] ⚡ Bash: agent-browser connect 9222
+[6:30:47 PM] ✓ Result: Done
+[6:31:10 PM] ⚡ Bash: agent-browser open https://x.com/home
+[6:31:27 PM] ⚡ Bash: agent-browser snapshot -i -c -s 'article'
+[6:31:44 PM] ● Agent: Found first post, like button ref=e136
+[6:31:44 PM] ⚡ Bash: agent-browser click e136
+[6:31:45 PM] ✓ Result: Done</code></pre>
+
+  <h2>Quick Start</h2>
+  <p>
+    Get LocoAgent running in three steps:
+  </p>
+
+  <pre><code># 1. Clone and install
+git clone https://github.com/LocoreMind/locoagent.git
+cd locoagent
+bun install
+
+# 2. Configure .env
+CLAUDE_CODE_USE_OPENAI=1
+OPENAI_API_KEY=sk-or-v1-...
+OPENAI_BASE_URL=https://openrouter.ai/api/v1
+OPENAI_MODEL=anthropic/claude-sonnet-4.5
+SKIP_PERMISSIONS=1
+
+# 3. Setup Chrome and run
+bun run setup-chrome
+bun start</code></pre>
+
+  <pre><code># Or run a single task headless
+bun start -p "open X.com and like the first post about AI agents"</code></pre>
+
+  <h2>Tech Stack</h2>
+
+  <div class="spec-table">
+    <table>
+      <tr>
+        <td>Runtime</td>
+        <td>Bun</td>
+      </tr>
+      <tr>
+        <td>Language</td>
+        <td>TypeScript (TSX)</td>
+      </tr>
+      <tr>
+        <td>UI</td>
+        <td>React + Ink (terminal rendering)</td>
+      </tr>
+      <tr>
+        <td>CLI</td>
+        <td>Commander.js</td>
+      </tr>
+      <tr>
+        <td>Browser Automation</td>
+        <td>agent-browser + Chrome CDP</td>
+      </tr>
+      <tr>
+        <td>LLM Integration</td>
+        <td>Multi-provider (Anthropic SDK + OpenAI-compatible shim)</td>
+      </tr>
+      <tr>
+        <td>Extension Protocol</td>
+        <td>MCP (Model Context Protocol)</td>
+      </tr>
+    </table>
+  </div>
+
+  <h2>Contributing</h2>
+  <p>
+    LocoAgent is open-source under the MIT license and built for the community. Key areas where contributions are welcome:
+  </p>
+  <ul>
+    <li><strong>New platform skills</strong> — Add operation playbooks for LinkedIn, Reddit, and other platforms</li>
+    <li><strong>New workflows</strong> — Automated pipelines for content creation and distribution</li>
+    <li><strong>New tools</strong> — Extend the agent's capabilities</li>
+    <li><strong>Bug fixes</strong> — Especially in browser automation edge cases</li>
+  </ul>
+
+  <div class="link-grid">
+    <a href="https://github.com/LocoreMind/locoagent" target="_blank" class="link-card">
+      <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+      <span class="link-card-text">Contribute on GitHub</span>
+    </a>
+    <a href="https://github.com/LocoreMind/locoagent/issues" target="_blank" class="link-card">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/></svg>
+      <span class="link-card-text">Report Issues</span>
+    </a>
+    <a href="https://youtu.be/QesPS8xPaDA" target="_blank" class="link-card">
+      <svg fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+      <span class="link-card-text">Watch Demo</span>
+    </a>
+  </div>
+
+</article>
+
+<script>
+// Dark mode detection
+if(window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches){
+  document.documentElement.classList.add('light')
+}
+</script>
+
+</body>
+</html>
